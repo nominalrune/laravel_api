@@ -17,9 +17,9 @@ return new class extends Migration
             $table->id();
             $table->timestamps();
             $table->string('title');
-            $table->text('description');
-            $table->integer('status');
-            $table->foreignId('parent_task');
+            $table->text('description')->nullable();
+            $table->integer('status')->default(0);
+            $table->foreignId('parent_task')->nullable();
         });
     }
 

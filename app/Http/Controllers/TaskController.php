@@ -4,7 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreTaskRequest;
 use App\Http\Requests\UpdateTaskRequest;
+use App\Models\TaskAcl;
+use Illuminate\Database\QueryException;
 use App\Models\Task;
+use App\Http\Resources\Task\TaskResource;
 
 class TaskController extends Controller
 {
@@ -15,17 +18,15 @@ class TaskController extends Controller
      */
     public function index()
     {
-        return json_encode(["hi"=>"Hello"]);
-    }
+        try {
+            $tasks = TaskAcl::where('user_id', auth()->user()->id)
+                ->reject(fn ($acl) => $acl->read === false)
+                ->map(fn ($acl) => $acl->task);
+        } catch (QueryException $e) {
+            return $this->respondInvalidQuery();
+        }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
+        return TaskResource::collection($tasks);
     }
 
     /**
@@ -36,7 +37,21 @@ class TaskController extends Controller
      */
     public function store(StoreTaskRequest $request)
     {
-        //
+        try {
+            $task = Task::create($request->validated());
+            TaskAcl::create([
+                'task_id' => $task->id,
+                'user_id' => auth()->user()->id,
+                'read' => true,
+                'create' => true,
+                'update' => true,
+                'delete' => true,
+                'share' => true,
+            ]);
+        } catch (QueryException $e) {
+            return $this->respondInvalidQuery();
+        }
+        return new TaskResource($task);
     }
 
     /**
@@ -47,18 +62,7 @@ class TaskController extends Controller
      */
     public function show(Task $task)
     {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Task  $task
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Task $task)
-    {
-        //
+        return new TaskResource($task);
     }
 
     /**
@@ -70,7 +74,12 @@ class TaskController extends Controller
      */
     public function update(UpdateTaskRequest $request, Task $task)
     {
-        //
+        try {
+            $task->update($request->validated());
+        } catch (QueryException $e) {
+            return $this->respondInvalidQuery();
+        }
+        return new TaskResource($task);
     }
 
     /**
@@ -81,6 +90,11 @@ class TaskController extends Controller
      */
     public function destroy(Task $task)
     {
-        //
+        try {
+            $task->delete();
+        } catch (QueryException $e) {
+            return $this->respondInvalidQuery();
+        }
+        return response()->noContent();
     }
 }
