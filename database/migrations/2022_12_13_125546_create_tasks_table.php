@@ -19,7 +19,7 @@ return new class extends Migration
             $table->string('title');
             $table->text('description')->nullable();
             $table->integer('status')->default(0);
-            $table->foreignId('parent_task')->nullable();
+            $table->foreignId('parent_task_id')->nullable();
         });
     }
 

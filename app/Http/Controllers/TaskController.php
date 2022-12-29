@@ -74,6 +74,10 @@ class TaskController extends Controller
      */
     public function update(UpdateTaskRequest $request, Task $task)
     {
+        TaskAcl::where('task_id', $task->id)
+            ->where('user_id', auth()->user()->id)
+            ->where('update', true)
+            ->firstOrFail();
         try {
             $task->update($request->validated());
         } catch (QueryException $e) {
