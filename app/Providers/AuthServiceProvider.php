@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use Illuminate\Auth\Notifications\ResetPassword;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
+use App\Models\User;
 use App\Models\UserGroup;
 use App\Models\Record;
 use App\Models\Task;
@@ -15,6 +16,7 @@ class AuthServiceProvider extends ServiceProvider
      * @var array
      */
     protected $policies = [
+        User::class => App\Policies\UserPolicy::class,
         UserGroup::class => App\Policies\UserGroupPolicy::class,
         Record::class => App\Policies\RecordPolicy::class,
         Task::class => App\Policies\TaskPolicy::class,
