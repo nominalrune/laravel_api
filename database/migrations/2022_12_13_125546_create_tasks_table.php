@@ -3,6 +3,7 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
+use App\Models\UserGroup;
 
 return new class extends Migration
 {
@@ -16,10 +17,12 @@ return new class extends Migration
         Schema::create('tasks', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
+            $table->softDeletes();
+            $table->foreignIdFor(UserGroup::class, 'assigned_to_id');
             $table->string('title');
             $table->text('description')->nullable();
             $table->integer('status')->default(0);
-            $table->foreignId('parent_task_id')->nullable();
+            $table->foreignIdFor(Task::class,'parent_task_id')->nullable();
         });
     }
 

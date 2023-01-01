@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 use App\Models\Task;
-use App\Models\User;
+use App\Models\UserGroup;
 
 return new class extends Migration
 {
@@ -15,10 +15,11 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('task_acls', function (Blueprint $table) {
+        Schema::create('acls', function (Blueprint $table) {
             $table->id();
-            $table->foreignIdFor(Task::class);
-            $table->foreignIdFor(User::class);
+            $table->char('target_table',48);
+            $table->foreignId('target_id');
+            $table->foreignIdFor(UserGroup::class, 'user_id');
             $table->boolean('read')->default(false);
             $table->boolean('create')->default(false);
             $table->boolean('update')->default(false);

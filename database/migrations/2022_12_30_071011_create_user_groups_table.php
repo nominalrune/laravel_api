@@ -3,8 +3,6 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
-use App\Models\User;
-use App\Models\Task;
 
 return new class extends Migration
 {
@@ -15,16 +13,19 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('records', function (Blueprint $table) {
+        Schema::create('user_groups', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
             $table->softDeletes();
-            $table->string('title');
-            $table->text('description')->nullable();
-            $table->foreignIdFor(Task::class,'related_task_id')->nullable();
-            $table->dateTime('started_at')->nullable();
-            $table->dateTime('ended_at')->nullable();
+            $table->string('name');
+            $table->boolean('is_individual')->default(false);
+        });
+        Schema::create('user_group_members', function (Blueprint $table) {
+            $table->id();
+            $table->softDeletes();
+            $table->foreignIdFor(UserGroup::class, 'group_id');
             $table->foreignIdFor(User::class, 'user_id');
+            $table->tinyInteger('state');
         });
     }
 
@@ -35,6 +36,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('records');
+        Schema::dropIfExists('user_groups');
     }
 };
