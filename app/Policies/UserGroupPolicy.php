@@ -2,6 +2,7 @@
 
 namespace App\Policies;
 
+use App\Models\ModelAcl;
 use App\Models\User;
 use App\Models\UserGroup;
 use Illuminate\Auth\Access\HandlesAuthorization;
@@ -18,7 +19,7 @@ class UserGroupPolicy
      */
     public function viewAny(User $user)
     {
-        //
+        ModelAcl::modelAcl('user_groups', $user->userGroup)->read;
     }
 
     /**
@@ -30,7 +31,7 @@ class UserGroupPolicy
      */
     public function view(User $user, UserGroup $userGroup)
     {
-        //
+        $userGroup->acl($user)->read;
     }
 
     /**
@@ -41,7 +42,7 @@ class UserGroupPolicy
      */
     public function create(User $user)
     {
-        //
+        ModelAcl::modelAcl('user_groups', $user->userGroup)->create;
     }
 
     /**
@@ -53,7 +54,7 @@ class UserGroupPolicy
      */
     public function update(User $user, UserGroup $userGroup)
     {
-        //
+        $userGroup->acl($user)->update;
     }
 
     /**
@@ -65,7 +66,7 @@ class UserGroupPolicy
      */
     public function delete(User $user, UserGroup $userGroup)
     {
-        //
+        $userGroup->acl($user)->delete;
     }
 
     /**
@@ -77,7 +78,7 @@ class UserGroupPolicy
      */
     public function restore(User $user, UserGroup $userGroup)
     {
-        //
+        $userGroup->acl($user)->delete;
     }
 
     /**
@@ -89,6 +90,6 @@ class UserGroupPolicy
      */
     public function forceDelete(User $user, UserGroup $userGroup)
     {
-        //
+        return false;
     }
 }

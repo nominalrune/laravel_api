@@ -4,6 +4,8 @@ namespace App\Policies;
 
 use App\Models\Record;
 use App\Models\User;
+use App\Models\UserGroup;
+use App\Models\ModelAcl;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
 class RecordPolicy
@@ -18,7 +20,7 @@ class RecordPolicy
      */
     public function viewAny(User $user)
     {
-        return true;
+        return ModelAcl::modelAcl('records', $user->userGroup)->read;
     }
 
     /**
@@ -30,7 +32,7 @@ class RecordPolicy
      */
     public function view(User $user, Record $record)
     {
-        return true;
+        return $record->acl($user)->read;
     }
 
     /**
@@ -41,19 +43,20 @@ class RecordPolicy
      */
     public function create(User $user)
     {
-        return true;
+        $acl=ModelAcl::modelAcl('records', $user->userGroup);
+        return $acl->create;
     }
 
     /**
      * Determine whether the user can update the model.
      *
-     * @param  \App\Models\User  $user
-     * @param  \App\Models\Record  $record
+     * @param \App\Models\User  $user
+     * @param \App\Models\Record  $record
      * @return \Illuminate\Auth\Access\Response|bool
      */
     public function update(User $user, Record $record)
     {
-        return true;
+        return $record->acl($user)->update;
     }
 
     /**
@@ -65,7 +68,7 @@ class RecordPolicy
      */
     public function delete(User $user, Record $record)
     {
-        return true;
+        return $record->acl($user)->delete;
     }
 
     /**
@@ -77,7 +80,7 @@ class RecordPolicy
      */
     public function restore(User $user, Record $record)
     {
-        return true;
+        return $record->acl($user)->delete;
     }
 
     /**
@@ -89,6 +92,6 @@ class RecordPolicy
      */
     public function forceDelete(User $user, Record $record)
     {
-        return true;
+        return false;
     }
 }

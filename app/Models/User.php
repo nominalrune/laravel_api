@@ -22,7 +22,13 @@ class User extends Authenticatable
         $this->hasManyThrough(UserGroup::class, UserGroupMember::class, 'user_id', 'id', 'id', 'user_group_id');
     }
 
-    public function asUserGroup()
+    /**
+     * > This function returns a `UserGroup` model that is associated with the `User` model through the
+     * `UserGroupMember` model
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasOneThrough A collection of UserGroup objects.
+     */
+    public function userGroup()
     {
         return $this->hasOneThrough(UserGroup::class, UserGroupMember::class, 'user_id', 'id', 'id', 'user_group_id')->where('is_individual', true);
     }

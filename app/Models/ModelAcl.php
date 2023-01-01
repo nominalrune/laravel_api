@@ -5,19 +5,22 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Acl extends Model
+class ModelAcl extends Model
 {
     use HasFactory;
     protected $fillable = [
         'target_table',
-        'target_id',
         'user_group_id',
+        'read',
         'create',
         'update',
         'delete',
         'share'
     ];
-
+    public static function modelAcl(string $table_name, UserGroup $userGroup){
+        return ModelAcl::where('target_table', $table_name)
+        ->where('user_group_id', $userGroup->id)->get()->first();
+    }
     public function target()
     {
         return $this->belongsTo($this->target_table);

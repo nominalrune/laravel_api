@@ -2,6 +2,7 @@
 
 namespace App\Policies;
 
+use App\Models\ModelAcl;
 use App\Models\Task;
 use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
@@ -18,7 +19,7 @@ class TaskPolicy
      */
     public function viewAny(User $user)
     {
-        return true;
+        return ModelAcl::modelAcl('tasks', $user->userGroup)->read;
     }
 
     /**
@@ -30,7 +31,7 @@ class TaskPolicy
      */
     public function view(User $user, Task $task)
     {
-        return true;
+        return $task->acl($user)->read;
     }
 
     /**
@@ -41,7 +42,7 @@ class TaskPolicy
      */
     public function create(User $user)
     {
-        return true;
+    return ModelAcl::modelAcl('tasks', $user->userGroup)->create;
     }
 
     /**
@@ -53,7 +54,7 @@ class TaskPolicy
      */
     public function update(User $user, Task $task)
     {
-        return true;
+        return $task->acl($user)->update;
     }
 
     /**
@@ -65,7 +66,7 @@ class TaskPolicy
      */
     public function delete(User $user, Task $task)
     {
-        return true;
+        return $task->asc($user)->delete;
     }
 
     /**
@@ -77,7 +78,7 @@ class TaskPolicy
      */
     public function restore(User $user, Task $task)
     {
-        return true;
+        return $task->asc($user)->delete;
     }
 
     /**
@@ -89,6 +90,6 @@ class TaskPolicy
      */
     public function forceDelete(User $user, Task $task)
     {
-        return true;
+        return false;
     }
 }

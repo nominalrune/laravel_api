@@ -5,6 +5,8 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use App\Models\UserGroup;
+use App\Models\ModelAcl;
 
 class Record extends Model
 {
@@ -17,6 +19,7 @@ class Record extends Model
         'started_at',
         'ended_at',
     ];
+
     public function user()
     {
         return $this->belongsTo(User::class);
