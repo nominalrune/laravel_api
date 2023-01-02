@@ -45,7 +45,7 @@ class RegisteredUserController extends Controller
             'update'=>true,
             'delete'=>true,
             'share'=>false,
-        ])
+        ]);
 
         event(new Registered($user));
 
