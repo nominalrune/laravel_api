@@ -19,6 +19,7 @@ return new class extends Migration
             $table->timestamps();
             $table->softDeletes();
             $table->foreignIdFor(UserGroup::class, 'assigned_to_id');
+            $table->foreignIdFor(UserGroup::class, 'manager_id');
             $table->string('title');
             $table->text('description')->nullable();
             $table->integer('status')->default(0);

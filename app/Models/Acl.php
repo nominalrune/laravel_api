@@ -18,9 +18,11 @@ class Acl extends Model
         'share'
     ];
 
+
+
     public function target()
     {
-        return $this->belongsTo($this->target_table);
+        return $this->belongsTo($this->target_table,'target_id');
     }
     public function userGroup()
     {

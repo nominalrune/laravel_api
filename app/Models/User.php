@@ -12,7 +12,15 @@ use Laravel\Sanctum\HasApiTokens;
 class User extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable, SoftDeletes;
-
+    public static function createUserWithUserGroup(array $args){
+        $user= User::create($args);
+        $group=UserGroup::create(['name'=>$user->name]);
+        UserGroupMember::create([
+            'user_group_id'=>$group->id,
+            'user_id'=>$user->id,
+        ]);
+        return $user;
+    }
     public function userGroupMembers()
     {
         $this->hasMany(UserGroupMember::class, 'user_id', 'id');

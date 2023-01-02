@@ -4,10 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreTaskRequest;
 use App\Http\Requests\UpdateTaskRequest;
-use App\Models\TaskAcl;
+use App\Models\Acl;
 use Illuminate\Database\QueryException;
 use App\Models\Task;
 use App\Http\Resources\Task\TaskResource;
+use App\Models\UserGroupMember;
 
 class TaskController extends Controller
 {
@@ -19,13 +20,13 @@ class TaskController extends Controller
     public function index()
     {
         try {
-            $tasks = TaskAcl::where('user_id', auth()->user()->id)
-                ->reject(fn ($acl) => $acl->read === false)
-                ->map(fn ($acl) => $acl->task);
+            $tasks= Acl::where('target_table','tasks')
+                ->where('user_group_id', auth()->user()->userGroups->id)
+                ->get()
+                ->map(fn($acl)=>($acl->target));
         } catch (QueryException $e) {
             return $this->respondInvalidQuery();
         }
-
         return TaskResource::collection($tasks);
     }
 

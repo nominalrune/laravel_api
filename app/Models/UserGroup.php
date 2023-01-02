@@ -25,7 +25,6 @@ class UserGroup extends Model
     {
         $this->hasManyThrough(User::class, UserGroupMember::class, 'user_group_id', 'id', 'id', 'user_id');
     }
-
     /**
      * > This function returns all the ACLs that are associated with this user group
      *
