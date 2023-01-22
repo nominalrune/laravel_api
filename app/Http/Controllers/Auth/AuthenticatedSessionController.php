@@ -17,12 +17,17 @@ class AuthenticatedSessionController extends Controller
      */
     public function store(LoginRequest $request)
     {
+        try{
+            // return response()->json(['message' => 'test'], 200);
         $request->authenticate();
 
         $request->session()->regenerate();
+        $user=Auth::user();
 
-        return response()->noContent();
-    }
+        return response()->json(['user' => $user], 200);
+    }catch(\Exception $e){
+        return response()->json($e, 401);
+    }}
 
     /**
      * Destroy an authenticated session.

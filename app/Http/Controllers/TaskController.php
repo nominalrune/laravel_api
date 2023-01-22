@@ -40,8 +40,9 @@ class TaskController extends Controller
     {
         try {
             $task = Task::create($request->validated());
-            TaskAcl::create([
-                'task_id' => $task->id,
+            Acl::create([
+                'target_table' => 'tasks',
+                'target_id' => $task->id,
                 'user_id' => auth()->user()->id,
                 'read' => true,
                 'create' => true,
@@ -63,6 +64,7 @@ class TaskController extends Controller
      */
     public function show(Task $task)
     {
+        // auth is already handled by the policy class
         return new TaskResource($task);
     }
 
@@ -75,11 +77,7 @@ class TaskController extends Controller
      */
     public function update(UpdateTaskRequest $request, Task $task)
     {
-        TaskAcl::where('task_id', $task->id)
-            ->where('user_id', auth()->user()->id)
-            ->where('update', true)
-            ->firstOrFail();
-        try {
+        try { // auth is already handled by the policy class
             $task->update($request->validated());
         } catch (QueryException $e) {
             return $this->respondInvalidQuery();
@@ -90,7 +88,7 @@ class TaskController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\Task  $task
+     * @param  \App\Models\Task $task
      * @return \Illuminate\Http\Response
      */
     public function destroy(Task $task)

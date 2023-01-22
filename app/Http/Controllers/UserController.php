@@ -5,8 +5,9 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreUserGroupRequest;
 use App\Http\Requests\UpdateUserGroupRequest;
 use App\Models\UserGroup;
+use App\Models\User;
 
-class UserGroupController extends Controller
+class UserController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -21,10 +22,10 @@ class UserGroupController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \App\Http\Requests\StoreUserGroupRequest  $request
+     * @param   $request
      * @return \Illuminate\Http\Response
      */
-    public function store(StoreUserGroupRequest $request)
+    public function store($request)
     {
         //
     }
@@ -32,10 +33,10 @@ class UserGroupController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\UserGroup  $userGroup
+     * @param  \App\Models\User  $user
      * @return \Illuminate\Http\Response
      */
-    public function show(UserGroup $userGroup)
+    public function show(User $user)
     {
         //
     }
@@ -43,10 +44,10 @@ class UserGroupController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Models\UserGroup  $userGroup
+     * @param  \App\Models\User  $user
      * @return \Illuminate\Http\Response
      */
-    public function edit(UserGroup $userGroup)
+    public function edit(User $user)
     {
         //
     }
@@ -54,11 +55,11 @@ class UserGroupController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \App\Http\Requests\UpdateUserGroupRequest  $request
-     * @param  \App\Models\UserGroup  $userGroup
+     * @param    $request
+     * @param  \App\Models\User  $user
      * @return \Illuminate\Http\Response
      */
-    public function update(UpdateUserGroupRequest $request, UserGroup $userGroup)
+    public function update($request, User $userGroup)
     {
         //
     }
@@ -66,10 +67,10 @@ class UserGroupController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\UserGroup  $userGroup
+     * @param  \App\Models\User  $user
      * @return \Illuminate\Http\Response
      */
-    public function destroy(UserGroup $userGroup)
+    public function destroy(User $user)
     {
         //
     }

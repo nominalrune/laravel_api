@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\TaskController;
 use App\Http\Controllers\RecordController;
+use App\Http\Controllers\UserController;
 use App\Http\Controllers\UserGroupController;
 use App\Models\Task;
 use App\Models\Record;
@@ -18,7 +19,6 @@ use App\Models\UserGroup;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
-Route::get('/hi',function(){return json_encode(["hi"=>"Hello."]);});
 
 Route::middleware(['auth:sanctum'])->group(function () {
 
@@ -33,7 +33,6 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::post('/user_groups', [UserGroupController::class, 'store'])->can('create', UserGroup::class);
     Route::put('/user_groups/{user_group}', [UserGroupController::class, 'update'])->can('update', UserGroup::class);
     Route::delete('/user_groups/{user_group}', [UserGroupController::class, 'destroy'])->can('delete', UserGroup::class);
-
 
     Route::get('/tasks', [TaskController::class, 'index'])->can('viewAny', Task::class);
     Route::get('/tasks/{task}', [TaskController::class, 'show'])->can('view', Task::class);
