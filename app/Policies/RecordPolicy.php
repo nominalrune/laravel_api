@@ -4,8 +4,6 @@ namespace App\Policies;
 
 use App\Models\Record;
 use App\Models\User;
-use App\Models\UserGroup;
-use App\Models\ModelAcl;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
 class RecordPolicy
@@ -20,7 +18,7 @@ class RecordPolicy
      */
     public function viewAny(User $user)
     {
-        return ModelAcl::modelAcl('records', $user->userGroup)->read;
+        return true;
     }
 
     /**
@@ -43,8 +41,7 @@ class RecordPolicy
      */
     public function create(User $user)
     {
-        $acl=ModelAcl::modelAcl('records', $user->userGroup);
-        return $acl->create;
+        return true;
     }
 
     /**

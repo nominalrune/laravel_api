@@ -16,11 +16,11 @@ class RecordController extends Controller
 	 * @param  \Illuminate\Http\Request  $request
 	 * @return \Illuminate\Http\Response
 	 */
-	public function index($request)
+	public function index(Request $request)
 	{
         // Get the accessible records for the current user
         $accessible_records= Acl::where('target_table','records')
-            ->where('user_group_id', auth()->user()->userGroups->id)
+            ->where('user_group_id', auth()->user()->id)
             ->pluck('target')->toArray();
 
 		// Create a new Eloquent query

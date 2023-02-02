@@ -9,6 +9,10 @@ use Illuminate\Support\Facades\Auth;
 
 class AuthenticatedSessionController extends Controller
 {
+    public function show()
+    {
+        return response()->json(['user' => Auth::user()], 200);
+    }
     /**
      * Handle an incoming authentication request.
      *

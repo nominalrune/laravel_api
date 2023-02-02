@@ -5,11 +5,10 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Laravel\Scout\Searchable;
 
 class Task extends Model
 {
-    use HasFactory, SoftDeletes, Searchable;
+    use HasFactory, SoftDeletes;
     protected $fillable=[
         'title',
         'description',
@@ -17,17 +16,9 @@ class Task extends Model
         'status',
         'parent_task_id',
     ];
-    public function searchableAs()
-    {
-        return 'tasks_index';
-    }
     public function assignedTo()
     {
-        return $this->belongsTo(UserGroup::class, 'assigned_to_id', 'id');
-    }
-    public function isAssignedTo(User $user)
-    {
-        return $this->assignedTo->users()->where('id', $user->id)->exists();
+        return $this->belongsTo(User::class, 'assigned_to_id', 'id');
     }
     public function parentTask()
     {
@@ -39,10 +30,10 @@ class Task extends Model
     }
     public function acls()
     {
-        return $this->hasMany(Acl::class, 'target_id', 'id')->where('target_table', 'tasks');
+        return $this->hasMany(TaskAcl::class, 'target_id', 'id');
     }
     public function acl(User $user)
     {
-        return $this->acls()->where('user_group_id', $user->userGroup->id)->first();
+        return $this->acls()->where('user_id', $user->id);
     }
 }

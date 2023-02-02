@@ -5,8 +5,6 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use App\Models\UserGroup;
-use App\Models\ModelAcl;
 
 class Record extends Model
 {
@@ -34,6 +32,6 @@ class Record extends Model
     }
     public function acl(User $user)
     {
-        return $this->acls()->where('user_group_id', $user->userGroup->id)->first();
+        return $this->acls()->where('user_id', $user->id);
     }
 }

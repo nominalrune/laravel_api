@@ -18,7 +18,7 @@ class UserPolicy
      */
     public function viewAny(User $user)
     {
-        ModelAcl::modelAcl('user', $user->userGroup)->read;
+        return true;
     }
 
     /**
@@ -30,7 +30,7 @@ class UserPolicy
      */
     public function view(User $user, User $targetUser)
     {
-        $targetUser->acl($user)->read;
+        return $targetUser->acl($user)->read;
     }
 
     /**
@@ -41,7 +41,7 @@ class UserPolicy
      */
     public function create(User $user)
     {
-        ModelAcl::modelAcl('user', $user->userGroup)->create;
+        return true;
     }
 
     /**
@@ -53,7 +53,7 @@ class UserPolicy
      */
     public function update(User $user, User $targetUser)
     {
-        $targetUser->acl($user)->update;
+        return $targetUser->acl($user)->update;
     }
 
     /**
@@ -65,7 +65,7 @@ class UserPolicy
      */
     public function delete(User $user, User $targetUser)
     {
-        $targetUser->acl($user)->delete;
+        return $targetUser->acl($user)->delete;
     }
 
     /**
@@ -77,7 +77,7 @@ class UserPolicy
      */
     public function restore(User $user, User $targetUser)
     {
-        $targetUser->acl($user)->delete;
+        return $targetUser->acl($user)->delete;
     }
 
     /**

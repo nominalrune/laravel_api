@@ -4,11 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreTaskRequest;
 use App\Http\Requests\UpdateTaskRequest;
-use App\Models\Acl;
+use App\Models\TaskAcl;
 use Illuminate\Database\QueryException;
 use App\Models\Task;
-use App\Http\Resources\Task\TaskResource;
-use App\Models\UserGroupMember;
 
 class TaskController extends Controller
 {
@@ -20,14 +18,14 @@ class TaskController extends Controller
     public function index()
     {
         try {
-            $tasks= Acl::where('target_table','tasks')
-                ->where('user_group_id', auth()->user()->userGroups->id)
+            $tasks= TaskAcl::where('user_id', auth()->user()->id)
+            ->with('target')
                 ->get()
-                ->map(fn($acl)=>($acl->target));
+                ->pluck('target');
         } catch (QueryException $e) {
             return $this->respondInvalidQuery();
         }
-        return TaskResource::collection($tasks);
+        return $tasks;
     }
 
     /**
@@ -40,8 +38,7 @@ class TaskController extends Controller
     {
         try {
             $task = Task::create($request->validated());
-            Acl::create([
-                'target_table' => 'tasks',
+            TaskAcl::create([
                 'target_id' => $task->id,
                 'user_id' => auth()->user()->id,
                 'read' => true,
@@ -53,7 +50,7 @@ class TaskController extends Controller
         } catch (QueryException $e) {
             return $this->respondInvalidQuery();
         }
-        return new TaskResource($task);
+        return $task;
     }
 
     /**
@@ -65,7 +62,7 @@ class TaskController extends Controller
     public function show(Task $task)
     {
         // auth is already handled by the policy class
-        return new TaskResource($task);
+        return $task;
     }
 
     /**
@@ -82,7 +79,7 @@ class TaskController extends Controller
         } catch (QueryException $e) {
             return $this->respondInvalidQuery();
         }
-        return new TaskResource($task);
+        return $task;
     }
 
     /**
