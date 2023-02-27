@@ -26,12 +26,8 @@ class Record extends Model
     {
         return $this->belongsTo(Task::class);
     }
-    public function acls()
+    public function permissions()
     {
-        return $this->hasMany(Acl::class, 'target_id', 'id')->where('target_table', 'records');
-    }
-    public function acl(User $user)
-    {
-        return $this->acls()->where('user_id', $user->id);
+        return $this->morphMany(Permission::class, 'target', 'target_table', 'target_id');
     }
 }

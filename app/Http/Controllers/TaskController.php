@@ -4,8 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreTaskRequest;
 use App\Http\Requests\UpdateTaskRequest;
-use App\Models\TaskAcl;
-use Illuminate\Database\QueryException;
 use App\Models\Task;
 
 class TaskController extends Controller
@@ -17,15 +15,11 @@ class TaskController extends Controller
      */
     public function index()
     {
-        try {
-            $tasks= TaskAcl::where('user_id', auth()->user()->id)
-            ->with('target')
-                ->get()
-                ->pluck('target');
-        } catch (QueryException $e) {
-            return $this->respondInvalidQuery();
-        }
-        return $tasks;
+        $tasks = Task::whereHas('permissions', function ($query) {
+            $query->where('user_id', auth()->id())
+                ->where('permission_type', 'read');
+        })->pagenate(10);
+        return response()->json($tasks);
     }
 
     /**
@@ -36,20 +30,7 @@ class TaskController extends Controller
      */
     public function store(StoreTaskRequest $request)
     {
-        try {
-            $task = Task::create($request->validated());
-            TaskAcl::create([
-                'target_id' => $task->id,
-                'user_id' => auth()->user()->id,
-                'read' => true,
-                'create' => true,
-                'update' => true,
-                'delete' => true,
-                'share' => true,
-            ]);
-        } catch (QueryException $e) {
-            return $this->respondInvalidQuery();
-        }
+        $task = Task::create($request->validated());
         return $task;
     }
 
@@ -74,11 +55,8 @@ class TaskController extends Controller
      */
     public function update(UpdateTaskRequest $request, Task $task)
     {
-        try { // auth is already handled by the policy class
-            $task->update($request->validated());
-        } catch (QueryException $e) {
-            return $this->respondInvalidQuery();
-        }
+        // auth is already handled by the policy class
+        $task->update($request->validated());
         return $task;
     }
 
@@ -90,11 +68,7 @@ class TaskController extends Controller
      */
     public function destroy(Task $task)
     {
-        try {
-            $task->delete();
-        } catch (QueryException $e) {
-            return $this->respondInvalidQuery();
-        }
+        $task->delete();
         return response()->noContent();
     }
 }

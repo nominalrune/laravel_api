@@ -7,27 +7,22 @@ use Illuminate\Database\Eloquent\Model;
 use App\Models\Task;
 use App\Models\User;
 
-class TaskAcl extends Model
+class Permission extends Model
 {
     use HasFactory;
     protected $fillable = [
+        'target_table',
         'target_id',
+        'permission_type',
         'user_id',
-        'create',
-        'update',
-        'delete',
-        'share'
     ];
-
-
 
     public function target()
     {
-        return $this->belongsTo(Task::class,'target_id');
+        return $this->morphTo();
     }
     public function user()
     {
-        return $this->belongsTo(User::class,'user_id');
+        return $this->belongsTo(User::class);
     }
-
 }

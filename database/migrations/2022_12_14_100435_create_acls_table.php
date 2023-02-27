@@ -14,23 +14,12 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('task_acls', function (Blueprint $table) {
+        Schema::create('permissions', function (Blueprint $table) {
             $table->id();
+            $table->string('target_table');
             $table->foreignId('target_id');
-            $table->foreignIdFor(User::class, 'user_id');
-            $table->boolean('read')->default(false);
-            $table->boolean('update')->default(false);
-            $table->boolean('delete')->default(false);
-            $table->boolean('share')->default(false);
-        });
-        Schema::create('record_acls', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('target_id');
-            $table->foreignIdFor(User::class, 'user_id');
-            $table->boolean('read')->default(false);
-            $table->boolean('update')->default(false);
-            $table->boolean('delete')->default(false);
-            $table->boolean('share')->default(false);
+            $table->foreignIdFor(User::class, 'user_id')->onDelete('cascade');
+            $table->string('permission_type')->default("read");
         });
     }
 
@@ -41,7 +30,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('task_acls');
-        Schema::dropIfExists('record_acls');
+        Schema::dropIfExists('permissions');
     }
 };

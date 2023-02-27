@@ -28,12 +28,8 @@ class Task extends Model
     {
         return $this->hasMany(Task::class, 'parent_task_id', 'id');
     }
-    public function acls()
+    public function permissions()
     {
-        return $this->hasMany(TaskAcl::class, 'target_id', 'id');
-    }
-    public function acl(User $user)
-    {
-        return $this->acls()->where('user_id', $user->id);
+        return $this->morphMany(Permission::class, 'target', 'target_table', 'target_id');
     }
 }

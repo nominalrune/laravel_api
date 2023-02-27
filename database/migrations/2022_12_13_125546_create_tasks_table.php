@@ -3,7 +3,7 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
-use App\Models\UserGroup;
+use App\Models\User;
 use App\Models\Task;
 
 return new class extends Migration
@@ -19,8 +19,8 @@ return new class extends Migration
             $table->id();
             $table->timestamps();
             $table->softDeletes();
-            $table->foreignIdFor(UserGroup::class, 'assigned_to_id');
-            $table->foreignIdFor(UserGroup::class, 'manager_id');
+            $table->foreignIdFor(User::class, 'assigned_to_id');
+            $table->foreignIdFor(User::class, 'manager_id');
             $table->string('title');
             $table->text('description')->nullable();
             $table->integer('status')->default(0);

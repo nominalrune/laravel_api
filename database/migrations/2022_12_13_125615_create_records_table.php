@@ -22,8 +22,8 @@ return new class extends Migration
             $table->string('title');
             $table->text('description')->nullable();
             $table->foreignIdFor(Task::class,'related_task_id')->nullable();
-            $table->dateTime('started_at')->nullable();
-            $table->dateTime('ended_at')->nullable();
+            $table->dateTime('start_at')->nullable();
+            $table->dateTime('end_at')->nullable();
             $table->foreignIdFor(User::class, 'user_id');
         });
     }
