@@ -4,14 +4,16 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+;
 use App\Models\Task;
 use App\Models\User;
 
 class Permission extends Model
 {
     use HasFactory;
+    public $timestamps = false;
     protected $fillable = [
-        'target_table',
+        'target_type',
         'target_id',
         'permission_type',
         'user_id',
@@ -19,7 +21,7 @@ class Permission extends Model
 
     public function target()
     {
-        return $this->morphTo();
+        return $this->morphTo('target', 'target_type', 'target_id');
     }
     public function user()
     {

@@ -4,7 +4,6 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-use App\Models\TaskAcl;
 class UpdateTaskRequest extends FormRequest
 {
     /**
@@ -14,10 +13,7 @@ class UpdateTaskRequest extends FormRequest
      */
     public function authorize()
     {
-        TaskAcl::where('task_id', $task->id)
-            ->where('user_id', auth()->user()->id)
-            ->where('update', true)
-            ->firstOrFail();
+        return true;
     }
 
     /**
@@ -28,7 +24,12 @@ class UpdateTaskRequest extends FormRequest
     public function rules()
     {
         return [
-            //
+            'title' => ['required', 'string', 'max:255'],
+            'type' => ['required', 'string', 'max:255'],
+            'description' => ['nullable','string','max:50000'],
+            'status' => ['required','integer'],
+            'owner_id' => [ 'integer', 'exists:users,id', 'nullable' ],
+            'parent_task_id'=>[ 'integer', 'exists:tasks,id', 'nullable' ],
         ];
     }
 }

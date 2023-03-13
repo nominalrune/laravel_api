@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreTaskRequest;
 use App\Http\Requests\UpdateTaskRequest;
+use App\Models\Permission;
 use App\Models\Task;
+use Illuminate\Support\Facades\Log;
 
 class TaskController extends Controller
 {
@@ -15,11 +17,11 @@ class TaskController extends Controller
      */
     public function index()
     {
-        $tasks = Task::whereHas('permissions', function ($query) {
-            $query->where('user_id', auth()->id())
+            $tasks = Task::whereHas('permissions', function ($query) {
+            $query->where('user_id', auth()->user()->id)
                 ->where('permission_type', 'read');
-        })->pagenate(10);
-        return response()->json($tasks);
+        })->get();
+        return $tasks;
     }
 
     /**
@@ -30,7 +32,17 @@ class TaskController extends Controller
      */
     public function store(StoreTaskRequest $request)
     {
-        $task = Task::create($request->validated());
+        $inputs=$request->validated();
+        // Log::debug("store task", ['inputs' => $inputs, "all"=>$request->all()]);
+        $task = Task::create($inputs);
+        foreach (['read','write','delete'] as $permission) {
+            Permission::create([
+                'user_id' => auth()->user()->id,
+                'target_type' => Task::class,
+                'target_id' => $task->id,
+                'permission_type' => $permission,
+            ]);
+        }
         return $task;
     }
 
@@ -42,7 +54,7 @@ class TaskController extends Controller
      */
     public function show(Task $task)
     {
-        // auth is already handled by the policy class
+        $this->authorize('view', $task); //FIXME not working
         return $task;
     }
 
@@ -55,7 +67,7 @@ class TaskController extends Controller
      */
     public function update(UpdateTaskRequest $request, Task $task)
     {
-        // auth is already handled by the policy class
+        $this->authorize('update', $task);
         $task->update($request->validated());
         return $task;
     }
@@ -68,6 +80,7 @@ class TaskController extends Controller
      */
     public function destroy(Task $task)
     {
+        $this->authorize('delete', $task);
         $task->delete();
         return response()->noContent();
     }

@@ -5,6 +5,7 @@ namespace App\Policies;
 use App\Models\Task;
 use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
+use Illuminate\Support\Facades\Log;
 
 class TaskPolicy
 {
@@ -28,9 +29,13 @@ class TaskPolicy
      * @param  \App\Models\Task  $task
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function view(User $user, Task $task)
+    public function view(User $user,Task $task)
     {
-        return $task->acl($user)->read;
+        Log::debug("view task @TaskPokicy", ['user' => $user, 'task' => $task]);
+        $count=$task->permissions;
+        Log::debug("view task @TaskPokicy", ['count' => $count]);
+        // return $count->where('user_id', $user->id)->where('permission_type','read') ->count()>0;
+        return true;
     }
 
     /**
@@ -53,7 +58,7 @@ class TaskPolicy
      */
     public function update(User $user, Task $task)
     {
-        return $task->acl($user)->update;
+        return true;
     }
 
     /**
@@ -65,7 +70,7 @@ class TaskPolicy
      */
     public function delete(User $user, Task $task)
     {
-        return $task->acl($user)->delete;
+        return true;
     }
 
     /**
@@ -77,7 +82,7 @@ class TaskPolicy
      */
     public function restore(User $user, Task $task)
     {
-        return $task->acl($user)->delete;
+        return true;
     }
 
     /**

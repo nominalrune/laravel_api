@@ -8,26 +8,27 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Record extends Model
 {
-    use HasFactory, SoftDeletes;
+    use HasFactory;
     protected $fillable=[
         'title',
         'description',
         'user_id',
-        'related_task_id',
-        'started_at',
-        'ended_at',
+        'topic_type',
+        'topic_id',
+        'date',
+        'time',
     ];
 
     public function user()
     {
         return $this->belongsTo(User::class);
     }
-    public function relatedTask()
+    public function topic()
     {
-        return $this->belongsTo(Task::class);
+        return $this->morphTo();
     }
     public function permissions()
     {
-        return $this->morphMany(Permission::class, 'target', 'target_table', 'target_id');
+        return $this->morphMany(Permission::class, 'target', 'target_type', 'target_id');
     }
 }

@@ -71,7 +71,7 @@ return [
     |
     */
 
-    'timezone' => 'UTC',
+    'timezone' => 'Asia/Tokyo',
 
     /*
     |--------------------------------------------------------------------------
@@ -197,6 +197,11 @@ return [
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
 
+        /*
+         * IDE supporting Service Providers...
+         * you need this only if you set extra.laravel.dont-discover in composer.json
+         */
+        // Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider::class,
     ],
 
     /*

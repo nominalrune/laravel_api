@@ -24,7 +24,13 @@ class UpdateRecordRequest extends FormRequest
     public function rules()
     {
         return [
-            //
+            'title' => ['required', 'string', 'max:255'],
+            'desctription'=>['nullable','string','max:50000'],
+            'topic_type'=>['nullable','string','max:255'],
+            'topic_id'=>['nullable','integer'],
+            'date'=>['nullable','date'],
+            'time'=>['nullable','string'],
+            'user_id'=>['required','integer','exists:users,id'],
         ];
     }
 }

@@ -4,36 +4,29 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 use App\Models\User;
-use App\Models\Task;
-
 return new class extends Migration
 {
     /**
      * Run the migrations.
-     *
-     * @return void
      */
-    public function up()
+    public function up(): void
     {
-        Schema::create('records', function (Blueprint $table) {
+        Schema::create('calendar_events', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
             $table->string('title');
             $table->text('description')->nullable();
-            $table->nullableMorphs('topic');
-            $table->dateTime('date')->nullable();
-            $table->unsignedInteger('time')->nullable();
-            $table->foreignIdFor(User::class, 'user_id');
+            $table->dateTime('start_at');
+            $table->dateTime('end_at')->nullable();
+            $table->foreignIdFor(User::class);
         });
     }
 
     /**
      * Reverse the migrations.
-     *
-     * @return void
      */
-    public function down()
+    public function down(): void
     {
-        Schema::dropIfExists('records');
+        Schema::dropIfExists('calender_events');
     }
 };

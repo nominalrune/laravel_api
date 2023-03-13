@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class StoreTaskRequest extends FormRequest
+class CalendarIndexRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,12 +24,12 @@ class StoreTaskRequest extends FormRequest
     public function rules()
     {
         return [
-            'title' => ['required', 'string', 'max:255'],
-            'type' => ['required', 'string', 'max:255'],
-            'description' => ['required','string','max:50000'],
-            'status' => ['required','integer'],
-            'owner_id' => [ 'integer', 'exists:users,id', 'nullable' ],
-            'parent_task_id'=>[ 'integer', 'exists:tasks,id', 'nullable' ],
+            'display_type'=>['nullable','in:month,week,day'],
+            'start'=>['nullable','date'],
+            'end'=>['nullable','date'],
+            'event_type'=>['nullable','string'],
+            'user.*.id'=>['nullable','integer','exists:users,id'],
+            'status_type'=>['nullable','string'],
         ];
     }
 }

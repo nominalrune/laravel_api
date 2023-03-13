@@ -8,17 +8,19 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Task extends Model
 {
-    use HasFactory, SoftDeletes;
+    use HasFactory;
     protected $fillable=[
+        'type',
         'title',
+        'due',
         'description',
-        'assigned_to_id',
+        'owner_id',
         'status',
         'parent_task_id',
     ];
-    public function assignedTo()
+    public function owner()
     {
-        return $this->belongsTo(User::class, 'assigned_to_id', 'id');
+        return $this->belongsTo(User::class, 'owner_id', 'id');
     }
     public function parentTask()
     {
@@ -30,6 +32,7 @@ class Task extends Model
     }
     public function permissions()
     {
-        return $this->morphMany(Permission::class, 'target', 'target_table', 'target_id');
+        return $this->morphMany(Permission::class, 'target');
     }
+
 }

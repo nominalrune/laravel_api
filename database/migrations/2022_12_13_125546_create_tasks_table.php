@@ -18,11 +18,11 @@ return new class extends Migration
         Schema::create('tasks', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
-            $table->softDeletes();
-            $table->foreignIdFor(User::class, 'assigned_to_id');
-            $table->foreignIdFor(User::class, 'manager_id');
+            $table->string('type');
             $table->string('title');
+            $table->date('due')->nullable();
             $table->text('description')->nullable();
+            $table->foreignIdFor(User::class, 'owner_id')->nullable();
             $table->integer('status')->default(0);
             $table->foreignIdFor(Task::class,'parent_task_id')->nullable();
         });
