@@ -60,7 +60,7 @@ class CalendarController extends Controller
                     ->get();
         }
         // Log::debug("CallenderController::index, tasks, calendarEvents, records",[$tasks, $calendarEvents, $records]);
-        $events = $tasks->concat($calendarEvents)->concat($records)
+        $events = $calendarEvents->concat($tasks)->concat($records)
             ->sort(function ($a, $b) {
                 $a_date = $a instanceof Task ? $a->due : $a->start ?? $a->end;
                 $b_date = $b instanceof Task ? $b->due : $b->start ?? $b->end;
