@@ -26,9 +26,10 @@ class StoreTaskRequest extends FormRequest
         return [
             'title' => ['required', 'string', 'max:255'],
             'type' => ['required', 'string', 'max:255'],
-            'description' => ['required','string','max:50000'],
-            'status' => ['required','integer'],
-            'owner_id' => [ 'integer', 'exists:users,id', 'nullable' ],
+            'due' => ['nullable', 'date'],
+            'description' => ['nullable','string','max:50000'],
+            'status' => ['nullable','integer'],
+            'owner_id' => ['integer', 'exists:users,id', 'nullable'],
             'parent_task_id'=>[ 'integer', 'exists:tasks,id', 'nullable' ],
         ];
     }

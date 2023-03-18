@@ -7,6 +7,7 @@ use App\Http\Requests\UpdateTaskRequest;
 use App\Models\Permission;
 use App\Models\Task;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Http\Request;
 
 class TaskController extends Controller
 {
@@ -15,13 +16,9 @@ class TaskController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-            $tasks = Task::whereHas('permissions', function ($query) {
-            $query->where('user_id', auth()->user()->id)
-                ->where('permission_type', 'read');
-        })->get();
-        return $tasks;
+        return $request->user()->tasks;
     }
 
     /**
@@ -32,29 +29,33 @@ class TaskController extends Controller
      */
     public function store(StoreTaskRequest $request)
     {
-        $inputs=$request->validated();
-        // Log::debug("store task", ['inputs' => $inputs, "all"=>$request->all()]);
+        $request->mergeIfMissing(['owner_id' => $request->user()->id]);
+        $inputs = $request->validated();
         $task = Task::create($inputs);
-        foreach (['read','write','delete'] as $permission) {
-            Permission::create([
-                'user_id' => auth()->user()->id,
-                'target_type' => Task::class,
-                'target_id' => $task->id,
-                'permission_type' => $permission,
-            ]);
+        if ($task->owner_id != $request->user()->id) {
+            foreach (['read', 'write', 'delete'] as $permission) {
+                Permission::create([
+                    'user_id' => $request->user()->id,
+                    'target_type' => Task::class,
+                    'target_id' => $task->id,
+                    'permission_type' => $permission,
+                ]);
+            }
         }
+
         return $task;
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\Task  $task
      * @return \Illuminate\Http\Response
      */
-    public function show(Task $task)
+    public function show(Request $request)
     {
-        $this->authorize('view', $task); //FIXME not working
+        $task = Task::findOrFail($request->id);
+        // $this->authorize('view', $task); //FIXME not working
+        Log::debug(['task' => $task]);
         return $task;
     }
 
