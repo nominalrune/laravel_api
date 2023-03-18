@@ -30,7 +30,8 @@ class TaskController extends Controller
     public function store(StoreTaskRequest $request)
     {
         $request->mergeIfMissing(['owner_id' => $request->user()->id]);
-        $inputs = $request->validated();
+        $inputs = $request->all();
+        Log::debug($inputs);
         $task = Task::create($inputs);
         if ($task->owner_id != $request->user()->id) {
             foreach (['read', 'write', 'delete'] as $permission) {
@@ -55,7 +56,7 @@ class TaskController extends Controller
     {
         $task = Task::findOrFail($request->id);
         // $this->authorize('view', $task); //FIXME not working
-        Log::debug(['task' => $task]);
+        // Log::debug(['task' => $task]);
         return $task;
     }
 
@@ -63,14 +64,15 @@ class TaskController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \App\Http\Requests\UpdateTaskRequest  $request
-     * @param  \App\Models\Task  $task
      * @return \Illuminate\Http\Response
      */
-    public function update(UpdateTaskRequest $request, Task $task)
+    public function update(UpdateTaskRequest $request, int $id)
     {
+        $task= Task::findOrFail($id);
         $this->authorize('update', $task);
         $task->update($request->validated());
-        return $task;
+        Log::debug(['task' => $task]);
+        return response($task);
     }
 
     /**

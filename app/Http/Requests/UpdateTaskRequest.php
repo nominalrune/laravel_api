@@ -26,9 +26,10 @@ class UpdateTaskRequest extends FormRequest
         return [
             'title' => ['required', 'string', 'max:255'],
             'type' => ['required', 'string', 'max:255'],
+            'due' => ['nullable', 'date'],
             'description' => ['nullable','string','max:50000'],
-            'status' => ['required','integer'],
-            'owner_id' => [ 'integer', 'exists:users,id', 'nullable' ],
+            'status' => ['nullable','integer'],
+            'owner_id' => ['integer', 'exists:users,id', 'nullable'],
             'parent_task_id'=>[ 'integer', 'exists:tasks,id', 'nullable' ],
         ];
     }

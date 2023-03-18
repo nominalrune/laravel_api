@@ -56,8 +56,10 @@ class TaskPolicy
      * @param  \App\Models\Task  $task
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function update(User $user, Task $task)
+    public function update(User $user)
     {
+        // Log::debug("@TaskPolicy::update ", ['user' => $user]);
+
         return true;
     }
 
