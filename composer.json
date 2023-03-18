@@ -49,12 +49,15 @@
         ],
         "post-create-project-cmd": [
             "@php artisan key:generate --ansi"
+        ],
+        "make:helper": [
+            "php artisan ide-helper:generate",
+            "php artisan ide-helper:models"
         ]
     },
     "extra": {
         "laravel": {
             "dont-discover": [
-                // "barryvdh/laravel-ide-helper"
             ]
         }
     },

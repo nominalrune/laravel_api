@@ -12,7 +12,7 @@
 
 namespace App\Models{
 /**
- * App\Models\CalenderEvent
+ * App\Models\CalendarEvent
  *
  * @property int $id
  * @property \Illuminate\Support\Carbon|null $created_at
@@ -22,19 +22,20 @@ namespace App\Models{
  * @property string $start_at
  * @property string|null $end_at
  * @property int $user_id
- * @method static \Illuminate\Database\Eloquent\Builder|CalenderEvent newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|CalenderEvent newQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|CalenderEvent query()
- * @method static \Illuminate\Database\Eloquent\Builder|CalenderEvent whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|CalenderEvent whereDescription($value)
- * @method static \Illuminate\Database\Eloquent\Builder|CalenderEvent whereEndAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|CalenderEvent whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|CalenderEvent whereStartAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|CalenderEvent whereTitle($value)
- * @method static \Illuminate\Database\Eloquent\Builder|CalenderEvent whereUpdatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|CalenderEvent whereUserId($value)
+ * @property-read \App\Models\User|null $user
+ * @method static \Illuminate\Database\Eloquent\Builder|CalendarEvent newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|CalendarEvent newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|CalendarEvent query()
+ * @method static \Illuminate\Database\Eloquent\Builder|CalendarEvent whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|CalendarEvent whereDescription($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|CalendarEvent whereEndAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|CalendarEvent whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|CalendarEvent whereStartAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|CalendarEvent whereTitle($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|CalendarEvent whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|CalendarEvent whereUserId($value)
  */
-	class CalenderEvent extends \Eloquent {}
+	class CalendarEvent extends \Eloquent {}
 }
 
 namespace App\Models{
@@ -128,6 +129,7 @@ namespace App\Models{
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property string $type
  * @property string $title
+ * @property string|null $due
  * @property string|null $description
  * @property int|null $owner_id
  * @property int $status
@@ -144,6 +146,7 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|Task query()
  * @method static \Illuminate\Database\Eloquent\Builder|Task whereCreatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Task whereDescription($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Task whereDue($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Task whereId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Task whereOwnerId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Task whereParentTaskId($value)
@@ -169,14 +172,27 @@ namespace App\Models{
  * @property string|null $remember_token
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\CalendarEvent> $allCalendarEvents
+ * @property-read int|null $all_calendar_events_count
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Record> $allRecords
+ * @property-read int|null $all_records_count
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Task> $allTasks
+ * @property-read int|null $all_tasks_count
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\CalendarEvent> $calendarEvents
+ * @property-read int|null $calendar_events_count
  * @property-read \Illuminate\Notifications\DatabaseNotificationCollection<int, \Illuminate\Notifications\DatabaseNotification> $notifications
  * @property-read int|null $notifications_count
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Permission> $permissions
+ * @property-read int|null $permissions_count
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Record> $records
+ * @property-read int|null $records_count
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Task> $tasks
+ * @property-read int|null $tasks_count
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \Laravel\Sanctum\PersonalAccessToken> $tokens
  * @property-read int|null $tokens_count
  * @method static \Database\Factories\UserFactory factory($count = null, $state = [])
  * @method static \Illuminate\Database\Eloquent\Builder|User newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|User newQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|User onlyTrashed()
  * @method static \Illuminate\Database\Eloquent\Builder|User query()
  * @method static \Illuminate\Database\Eloquent\Builder|User whereCreatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|User whereEmail($value)
@@ -188,8 +204,6 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|User whereRememberToken($value)
  * @method static \Illuminate\Database\Eloquent\Builder|User whereRole($value)
  * @method static \Illuminate\Database\Eloquent\Builder|User whereUpdatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|User withTrashed()
- * @method static \Illuminate\Database\Eloquent\Builder|User withoutTrashed()
  */
 	class User extends \Eloquent {}
 }

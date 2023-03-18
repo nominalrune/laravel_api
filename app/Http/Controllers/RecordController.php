@@ -17,59 +17,7 @@ class RecordController extends Controller
      */
     public function index(Request $request)
     {
-        // Create a new Eloquent query
-        $eloquent = Record::query();
-        $eloquent->whereHas('permissions', function ($query) {
-            $query->where('user_id', auth()->id())
-                ->where('permission_type', 'read');
-        });
-        // Define the possible queries and their data types
-        $possible_queries = [
-            ['started_at', 'timestamp'],
-            ['ended_at', 'timestamp'],
-            ['user_id', 'int'],
-            ['status', 'int'],
-            ['parent_task_id', 'int'],
-            ['title', 'string'],
-            ['description', 'string'],
-        ];
-        // Iterate through the possible queries
-        foreach ($possible_queries as $query) {
-            $field = $query[0];
-            $type = $query[1];
-
-            // Check if the query exists in the request
-            if ($request->has($field)) {
-                $value = $request->input($field);
-
-                // Check if the query is a timestamp range
-                if ($type === 'timestamp') {
-                    if (is_array($value)) {
-                        $from = $value[0];
-                        $to = $value[1];
-                        // Add timestamp range to query
-                        if ($from == null) {
-                            $eloquent->where($field, '<=', $to);
-                        } elseif ($to == null) {
-                            $eloquent->where($field, '>=', $from);
-                        } else {
-                            $eloquent->whereBetween($field, [$from, $to]);
-                        }
-                    }
-                } elseif ($type === 'string') {
-                    // Add string query to Eloquent
-                    $eloquent->where($field, 'like', '%' . $this->escapeLike($value) . '%');
-                } else {
-                    // Add integer query to Eloquent
-                    $eloquent->where($field, $value);
-                }
-            }
-        }
-        // Order by updated date
-        $eloquent->orderBy('updated_at', 'desc');
-        // pagenate the records by 10
-        $records = $eloquent->paginate(10);
-        return $records;
+        return $request->user()->records;
     }
 
     /**
