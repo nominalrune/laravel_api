@@ -11,25 +11,6 @@ use Illuminate\Support\Facades\Log;
 
 class CalendarController extends Controller
 {
-    private function getDefaultDays($display_type, Carbon $date)
-    {
-        switch ($display_type) {
-            case 'month':
-                $start = $date->copy()->startOfMonth();
-                $end = $date->copy()->endOfMonth();
-                break;
-            case 'week':
-                $start = $date->copy()->startOfWeek();
-                $end = $date->copy()->endOfWeek();
-                break;
-            case 'day':
-                $start = $date->copy()->startOfDay();
-                $end = $date->copy()->endOfDay();
-                break;
-        }
-        // Log::debug('calendar getDefaultDays', ['display_type' => $display_type, 'start' => $start, 'end' => $end]);
-        return ['start'=>$start, 'end'=>$end];
-    }
     public function index(CalendarIndexRequest $request)
     {
         $display_type = $request->string('display_type', 'month');
@@ -59,15 +40,14 @@ class CalendarController extends Controller
                     ->where('date', '<=', $end->toDateTimeString())
                     ->get();
         }
-        // Log::debug("CallenderController::index, tasks, calendarEvents, records",[$tasks, $calendarEvents, $records]);
-        $events = $calendarEvents->concat($tasks)->concat($records)
-            ->sort(function ($a, $b) {
-                $a_date = $a instanceof Task ? $a->due : $a->start ?? $a->end;
-                $b_date = $b instanceof Task ? $b->due : $b->start ?? $b->end;
-                return $a_date <=> $b_date;
-            });
-        Log::debug("CallenderController::index, all events",[$events]);
-        return response()->json($events);
+        $events = $calendarEvents->concat($tasks)->concat($records);
+            // ->sort(function ($a, $b) {
+            //     $a_date = $a instanceof Task ? $a->due : $a->start ?? $a->end;
+            //     $b_date = $b instanceof Task ? $b->due : $b->start ?? $b->end;
+            //     return $a_date <=> $b_date;
+            // });
+        Log::debug("CallenderController::index, all events",[$events->values()]);
+        return response()->json($events->values());
     }
 
     public function show(int $id)
@@ -100,5 +80,25 @@ class CalendarController extends Controller
     {
         $calendarEvent->delete();
         return response()->json(null, 204);
+    }
+
+    private function getDefaultDays($display_type, Carbon $date)
+    {
+        switch ($display_type) {
+            case 'month':
+                $start = $date->copy()->startOfMonth();
+                $end = $date->copy()->endOfMonth();
+                break;
+            case 'week':
+                $start = $date->copy()->startOfWeek();
+                $end = $date->copy()->endOfWeek();
+                break;
+            case 'day':
+                $start = $date->copy()->startOfDay();
+                $end = $date->copy()->endOfDay();
+                break;
+        }
+        // Log::debug('calendar getDefaultDays', ['display_type' => $display_type, 'start' => $start, 'end' => $end]);
+        return ['start'=>$start, 'end'=>$end];
     }
 }
