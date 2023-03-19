@@ -8,6 +8,7 @@ use App\Models\Task;
 use App\Http\Requests\CalendarIndexRequest;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Log;
+use App\Models\CalendarEntry;
 
 class CalendarController extends Controller
 {
@@ -26,19 +27,25 @@ class CalendarController extends Controller
                 $tasks = $request->user()->tasks()
                     ->where('due', '>=', $start->toDateString())
                     ->where('due', '<=', $end->toDateString())
-                    ->get();
+                    ->get()->map(function($task){
+                        return CalendarEntry::fromTask($task);
+                    });
         }
         if($event_type === 'all' || $event_type === 'calendar') {
                 $calendarEvents = $request->user()->calendarEvents()
                     ->where('end_at', '>=', $start->toDateTimeString())
                     ->where('start_at', '<=', $end->toDateTimeString())
-                    ->get();
+                    ->get()->map(function($event){
+                        return CalendarEntry::fromCalendarEvent($event);
+                    });
         }
         if($event_type === 'all' || $event_type === 'record') {
                 $records = $request->user()->records()
                     ->where('date', '>=', $start->toDateTimeString())
                     ->where('date', '<=', $end->toDateTimeString())
-                    ->get();
+                    ->get()->map(function($record){
+                        return CalendarEntry::fromRecord($record);
+                    });
         }
         $events = $calendarEvents->concat($tasks)->concat($records);
             // ->sort(function ($a, $b) {
