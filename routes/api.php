@@ -33,21 +33,22 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::post('/user/{id}', [UserController::class, 'update'])->can('update', User::class);
     Route::delete('/user/{id}', [UserController::class, 'destroy'])->can('delete', User::class);
 
-    Route::get('/tasks', [TaskController::class, 'index'])->can('viewAny', Task::class);
-    Route::get('/tasks/{id}', [TaskController::class, 'show']);
-    Route::post('/tasks', [TaskController::class, 'store'])->can('create', Task::class);
-    Route::post('/tasks/{id}', [TaskController::class, 'update'])->can('update', Task::class);
-    Route::delete('/tasks/{id}', [TaskController::class, 'destroy'])->can('delete', Task::class);
+    Route::get('/tasks', [TaskController::class, 'index'])->name('task.index')->can('viewAny', Task::class);
+    Route::get('/tasks/{id}', [TaskController::class, 'show'])->name('task.show');
+    Route::post('/tasks', [TaskController::class, 'store'])->name('task.store')->can('create', Task::class);
+    Route::post('/tasks/{id}', [TaskController::class, 'update'])->name('task.update')->can('update', Task::class);
+    Route::delete('/tasks/{id}', [TaskController::class, 'destroy'])->name('task.delete')->can('delete', Task::class);
 
-    Route::get('/records', [RecordController::class, 'index'])->can('viewAny', Record::class);
-    Route::get('/records/{id}', [RecordController::class, 'show'])->can('view', Record::class);
-    Route::post('/records', [RecordController::class, 'store'])->can('create', Record::class);
-    Route::post('/records/{id}', [RecordController::class, 'update'])->can('update', Record::class);
-    Route::delete('/records/{id}', [RecordController::class, 'destroy'])->can('delete', Record::class);
+    Route::get('/records', [RecordController::class, 'index'])->name('record.index')->can('viewAny', Record::class);
+    Route::get('/records/{id}', [RecordController::class, 'show'])->name('record.show')->can('view', Record::class);
+    Route::post('/records', [RecordController::class, 'store'])->name('record.store')->can('create', Record::class);
+    Route::post('/records/{id}', [RecordController::class, 'update'])->name('record.update')->can('update', Record::class);
+    Route::delete('/records/{id}', [RecordController::class, 'destroy'])->name('record.delete')->can('delete', Record::class);
 
-    Route::get('/calendar', [CalendarController::class, 'index']);
-    Route::get('/calendar/{id}', [CalendarController::class, 'show']);
-    Route::post('/calendar', [CalendarController::class, 'store']);
-    Route::post('/calendar/{id}', [CalendarController::class, 'update']);
-    Route::delete('/calendar/{id}', [CalendarController::class, 'destroy']);
+    Route::get('/calendar', [CalendarController::class, 'index'])->name('calendar.index');
+    Route::get('/calendar_event', [CalendarController::class, 'index'])->name('calendar_event.index');
+    Route::get('/calendar_event/{id}', [CalendarController::class, 'show'])->name('calendar_event.show');
+    Route::post('/calendar_event', [CalendarController::class, 'store'])->name('calendar_event.store');
+    Route::post('/calendar_event/{id}', [CalendarController::class, 'update'])->name('calendar_event.update');
+    Route::delete('/calendar_event/{id}', [CalendarController::class, 'destroy'])->name('calendar_event.delete');
 });
