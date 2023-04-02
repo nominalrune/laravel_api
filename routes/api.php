@@ -11,7 +11,7 @@ use App\Models\User;
 use App\Models\Permission;
 use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\CalendarController;
-
+use App\Http\Controllers\CommentController;
 
 
 /*
@@ -41,7 +41,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
 
     Route::get('/records', [RecordController::class, 'index'])->name('record.index')->can('viewAny', Record::class);
     Route::get('/records/{id}', [RecordController::class, 'show'])->name('record.show')->can('view', Record::class);
-    Route::post('/records', [RecordController::class, 'store'])->name('record.store')->can('create', Record::class);
+    Route::post('/records', [RecordController::class, 'store'])->name('record.store');
     Route::post('/records/{id}', [RecordController::class, 'update'])->name('record.update')->can('update', Record::class);
     Route::delete('/records/{id}', [RecordController::class, 'destroy'])->name('record.delete')->can('delete', Record::class);
 
@@ -51,4 +51,9 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::post('/calendar_event', [CalendarController::class, 'store'])->name('calendar_event.store');
     Route::post('/calendar_event/{id}', [CalendarController::class, 'update'])->name('calendar_event.update');
     Route::delete('/calendar_event/{id}', [CalendarController::class, 'destroy'])->name('calendar_event.delete');
+
+    Route::post('/comments', [CommentController::class, 'store'])->name('comment.store');
+    Route::put('/comments/{id}', [CommentController::class, 'update'])->name('comment.update');
+    Route::delete('/comments/{id}', [CommentController::class, 'destroy'])->name('comment.delete');
+
 });

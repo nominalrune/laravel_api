@@ -13,9 +13,14 @@ class StoreRecordRequest extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        return true;
     }
-
+    protected function prepareForValidation(): void
+    {
+        $this->merge([
+            'user_id'=>auth()->id(),
+        ]);
+    }
     /**
      * Get the validation rules that apply to the request.
      *
@@ -25,11 +30,11 @@ class StoreRecordRequest extends FormRequest
     {
         return [
             'title' => ['required', 'string', 'max:255'],
-            'desctription'=>['nullable','string','max:50000'],
+            'description'=>['nullable','string','max:50000'],
             'topic_type'=>['nullable','string','max:255'],
             'topic_id'=>['nullable','integer'],
-            'date'=>['nullable','date'],
-            'time'=>['nullable','string'],
+            'date' => ['nullable', 'date_format:Y-m-d'],
+            'time'=>['nullable','integer'],
             'user_id'=>['required','integer','exists:users,id'],
         ];
     }

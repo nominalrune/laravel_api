@@ -15,4 +15,8 @@ class Material extends Model
         'created_at',
         'updated_at',
     ];
+    public function comments()
+    {
+        return $this->morphMany(Comment::class, 'commentable');
+    }
 }

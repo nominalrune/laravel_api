@@ -21,7 +21,7 @@ return new class extends Migration
             $table->string('title');
             $table->text('description')->nullable();
             $table->nullableMorphs('topic');
-            $table->dateTime('date')->nullable();
+            $table->date('date')->nullable();
             $table->unsignedInteger('time')->nullable();
             $table->foreignIdFor(User::class, 'user_id');
         });

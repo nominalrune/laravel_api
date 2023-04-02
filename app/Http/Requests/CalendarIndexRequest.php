@@ -25,8 +25,8 @@ class CalendarIndexRequest extends FormRequest
     {
         return [
             'display_type'=>['nullable','in:month,week,day'],
-            'start'=>['nullable','date'],
-            'end'=>['nullable','date'],
+            'start'=>['nullable','date_format:Y-m-d H:i:s'],
+            'end'=>['nullable','date_format:Y-m-d H:i:s'],
             'event_type'=>['nullable','string'],
             'user.*.id'=>['nullable','integer','exists:users,id'],
             'status_type'=>['nullable','string'],
