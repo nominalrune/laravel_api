@@ -6,13 +6,23 @@ use Illuminate\Http\Request;
 use App\Models\CalendarEvent;
 use App\Models\Task;
 use App\Http\Requests\CalendarIndexRequest;
+use App\Http\Requests\CalendarEventStoreRequest;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Log;
 use App\Models\CalendarEntry;
+use App\Services\Calendar\traits\Create;
+use Vyuldashev\LaravelOpenApi\Attributes as OpenApi;
 
+
+#[OpenApi\PathItem]
 class CalendarController extends Controller
 {
-    public function index(CalendarIndexRequest $request)
+    use Create;
+    /**
+     * Return a listing of calendar events.
+     */
+    #[OpenApi\Operation(tags: ['calendar'], method: 'GET')]
+    public function index(CalendarIndexRequest $request):\Illuminate\Http\JsonResponse
     {
         $display_type = $request->string('display_type', 'month');
         $request->mergeIfMissing($this->getDefaultDays($display_type, $request->date('start')??now()));
@@ -53,37 +63,28 @@ class CalendarController extends Controller
             //     $b_date = $b instanceof Task ? $b->due : $b->start ?? $b->end;
             //     return $a_date <=> $b_date;
             // });
-        Log::debug("CallenderController::index, all events",[$events->values()]);
+        // Log::debug("CallenderController::index, all events",[$events->values()]);
         return response()->json($events->values());
     }
 
     public function show(int $id)
     {
-        // Log::debug('calendar show', ['id' => $id]);
         return CalendarEvent::find($id);
     }
-    public function store(Request $request)
+
+    public function store(CalendarEventStoreRequest $request): \Illuminate\Http\JsonResponse
     {
-        $title=$request->string('title');
-        $description=$request->string('description');
-        $start_at=$request->date('start_at', 'Y-m-d\TH:i', 'Asia/Tokyo');
-        $end_at=$request->date('end_at', 'Y-m-d\TH:i', 'Asia/Tokyo');
-        $user_id=$request->integer('user_id');
-        $calendarEvent = CalendarEvent::create([
-            'title' => $title,
-            'description' => $description,
-            'start_at' => $start_at,
-            'end_at' => $end_at,
-            'user_id' => $user_id,
-        ]);
-        return $calendarEvent;
+        $calendarEvent = $this->create($request);
+        return response()->json($calendarEvent);
     }
+
     public function update(Request $request, CalendarEvent $calendarEvent)
     {
         $calendarEvent->update($request->all());
-        return $calendarEvent;
+        return response()->json($calendarEvent);
     }
-    public function delete(CalendarEvent $calendarEvent)
+
+    public function destroy(CalendarEvent $calendarEvent)
     {
         $calendarEvent->delete();
         return response()->json(null, 204);

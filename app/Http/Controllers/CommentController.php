@@ -24,5 +24,10 @@ class CommentController extends Controller
         $comment->body = $request->input('body');
         $comment->save();
     }
+    public function destroy(Request $request)
+    {
+        $comment = Comment::find($request->integer('id'));
+        $comment->delete();
+    }
 
 }

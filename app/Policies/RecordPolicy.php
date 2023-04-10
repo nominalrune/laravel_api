@@ -54,7 +54,7 @@ class RecordPolicy
      */
     public function update(User $user, Record $record)
     {
-        return $record->acl($user)->update;
+        return true;
     }
 
     /**
@@ -66,7 +66,7 @@ class RecordPolicy
      */
     public function delete(User $user, Record $record)
     {
-        return $record->acl($user)->delete;
+        return true;
     }
 
     /**

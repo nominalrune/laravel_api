@@ -11,7 +11,8 @@
         "laravel/framework": "^10.0",
         "laravel/sanctum": "^3.2",
         "laravel/scout": "^9.8",
-        "laravel/tinker": "^2.7"
+        "laravel/tinker": "^2.7",
+        "vyuldashev/laravel-openapi": "^1.10"
     },
     "require-dev": {
         "barryvdh/laravel-ide-helper": "^2.13",

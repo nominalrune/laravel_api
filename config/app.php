@@ -157,7 +157,7 @@ return [
     */
 
     'providers' => [
-
+        Vyuldashev\LaravelOpenApi\OpenApiServiceProvider::class,
         /*
          * Laravel Framework Service Providers...
          */

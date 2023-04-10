@@ -6,6 +6,41 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Casts\Attribute;
+/**
+ * App\Models\Task
+ *
+ * @property int $id
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property string $type
+ * @property string $title
+ * @property string|null $due
+ * @property string|null $description
+ * @property int|null $owner_id
+ * @property int $status
+ * @property int|null $parent_task_id
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, Task> $childTasks
+ * @property-read int|null $child_tasks_count
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Comment> $comments
+ * @property-read int|null $comments_count
+ * @property-read \App\Models\User|null $owner
+ * @property-read Task|null $parentTask
+ * @method static \Database\Factories\TaskFactory factory($count = null, $state = [])
+ * @method static \Illuminate\Database\Eloquent\Builder|Task newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Task newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Task query()
+ * @method static \Illuminate\Database\Eloquent\Builder|Task whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Task whereDescription($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Task whereDue($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Task whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Task whereOwnerId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Task whereParentTaskId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Task whereStatus($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Task whereTitle($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Task whereType($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Task whereUpdatedAt($value)
+ * @mixin \Eloquent
+ */
 class Task extends Model
 {
     use HasFactory;
@@ -33,10 +68,10 @@ class Task extends Model
     {
         return $this->hasMany(Task::class, 'parent_task_id', 'id');
     }
-    public function permissions()
-    {
-        return $this->morphMany(Permission::class, 'target');
-    }
+    // public function permissions()
+    // {
+    //     return $this->morphMany(Permission::class, 'target');
+    // }
     public function comments()
     {
         return $this->morphMany(Comment::class, 'commentable');

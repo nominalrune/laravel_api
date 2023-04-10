@@ -23,6 +23,7 @@ namespace App\Models{
  * @property string|null $end_at
  * @property int $user_id
  * @property-read \App\Models\User|null $user
+ * @method static \Database\Factories\CalendarEventFactory factory($count = null, $state = [])
  * @method static \Illuminate\Database\Eloquent\Builder|CalendarEvent newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|CalendarEvent newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|CalendarEvent query()
@@ -34,31 +35,36 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|CalendarEvent whereTitle($value)
  * @method static \Illuminate\Database\Eloquent\Builder|CalendarEvent whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|CalendarEvent whereUserId($value)
+ * @mixin \Eloquent
  */
-	class CalendarEvent extends \Eloquent {}
+	class IdeHelperCalendarEvent {}
 }
 
 namespace App\Models{
 /**
- * App\Models\Material
+ * App\Models\Comment
  *
  * @property int $id
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
- * @property string $title
- * @property string|null $description
- * @property string|null $image_url
- * @method static \Illuminate\Database\Eloquent\Builder|Material newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|Material newQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|Material query()
- * @method static \Illuminate\Database\Eloquent\Builder|Material whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Material whereDescription($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Material whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Material whereImageUrl($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Material whereTitle($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Material whereUpdatedAt($value)
+ * @property int $user_id
+ * @property string $commentable_type
+ * @property int $commentable_id
+ * @property string $body
+ * @property-read \Illuminate\Database\Eloquent\Model|\Eloquent $commentable
+ * @method static \Illuminate\Database\Eloquent\Builder|Comment newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Comment newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Comment query()
+ * @method static \Illuminate\Database\Eloquent\Builder|Comment whereBody($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Comment whereCommentableId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Comment whereCommentableType($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Comment whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Comment whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Comment whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Comment whereUserId($value)
+ * @mixin \Eloquent
  */
-	class Material extends \Eloquent {}
+	class IdeHelperComment {}
 }
 
 namespace App\Models{
@@ -71,7 +77,7 @@ namespace App\Models{
  * @property int $user_id
  * @property string $permission_type
  * @property-read \Illuminate\Database\Eloquent\Model|\Eloquent $target
- * @property-read \App\Models\User|null $user
+ * @property-read \App\Models\User $user
  * @method static \Illuminate\Database\Eloquent\Builder|Permission newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Permission newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Permission query()
@@ -80,8 +86,9 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|Permission whereTargetId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Permission whereTargetType($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Permission whereUserId($value)
+ * @mixin \Eloquent
  */
-	class Permission extends \Eloquent {}
+	class IdeHelperPermission {}
 }
 
 namespace App\Models{
@@ -98,10 +105,9 @@ namespace App\Models{
  * @property string|null $date
  * @property int|null $time
  * @property int $user_id
- * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Permission> $permissions
- * @property-read int|null $permissions_count
- * @property-read \Illuminate\Database\Eloquent\Model|\Eloquent $topic
- * @property-read \App\Models\User|null $user
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Comment> $comments
+ * @property-read int|null $comments_count
+ * @property-read \App\Models\User $user
  * @method static \Database\Factories\RecordFactory factory($count = null, $state = [])
  * @method static \Illuminate\Database\Eloquent\Builder|Record newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Record newQuery()
@@ -116,8 +122,9 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|Record whereTopicType($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Record whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Record whereUserId($value)
+ * @mixin \Eloquent
  */
-	class Record extends \Eloquent {}
+	class IdeHelperRecord {}
 }
 
 namespace App\Models{
@@ -136,10 +143,10 @@ namespace App\Models{
  * @property int|null $parent_task_id
  * @property-read \Illuminate\Database\Eloquent\Collection<int, Task> $childTasks
  * @property-read int|null $child_tasks_count
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Comment> $comments
+ * @property-read int|null $comments_count
  * @property-read \App\Models\User|null $owner
  * @property-read Task|null $parentTask
- * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Permission> $permissions
- * @property-read int|null $permissions_count
  * @method static \Database\Factories\TaskFactory factory($count = null, $state = [])
  * @method static \Illuminate\Database\Eloquent\Builder|Task newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Task newQuery()
@@ -154,8 +161,9 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|Task whereTitle($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Task whereType($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Task whereUpdatedAt($value)
+ * @mixin \Eloquent
  */
-	class Task extends \Eloquent {}
+	class IdeHelperTask {}
 }
 
 namespace App\Models{
@@ -172,18 +180,10 @@ namespace App\Models{
  * @property string|null $remember_token
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
- * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\CalendarEvent> $allCalendarEvents
- * @property-read int|null $all_calendar_events_count
- * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Record> $allRecords
- * @property-read int|null $all_records_count
- * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Task> $allTasks
- * @property-read int|null $all_tasks_count
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\CalendarEvent> $calendarEvents
  * @property-read int|null $calendar_events_count
  * @property-read \Illuminate\Notifications\DatabaseNotificationCollection<int, \Illuminate\Notifications\DatabaseNotification> $notifications
  * @property-read int|null $notifications_count
- * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Permission> $permissions
- * @property-read int|null $permissions_count
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Record> $records
  * @property-read int|null $records_count
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Task> $tasks
@@ -204,7 +204,8 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|User whereRememberToken($value)
  * @method static \Illuminate\Database\Eloquent\Builder|User whereRole($value)
  * @method static \Illuminate\Database\Eloquent\Builder|User whereUpdatedAt($value)
+ * @mixin \Eloquent
  */
-	class User extends \Eloquent {}
+	class IdeHelperUser {}
 }
 
