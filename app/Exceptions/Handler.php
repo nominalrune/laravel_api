@@ -2,7 +2,11 @@
 
 namespace App\Exceptions;
 
+use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Database\QueryException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Illuminate\Support\Facades\Request;
+use Illuminate\Validation\ValidationException;
 use Throwable;
 
 class Handler extends ExceptionHandler
@@ -43,6 +47,15 @@ class Handler extends ExceptionHandler
      */
     public function register()
     {
+        $this->renderable(function (ModelNotFoundException $e, Request $request) {
+            return response(status: 404);
+        });
+        $this->renderable(function (ValidationException $e, Request $request) {
+            return response(status: 422);
+        });
+        $this->renderable(function (QueryException $e, Request $request) {
+            return response(status: 422);
+        });
         $this->reportable(function (Throwable $e) {
             //
         });

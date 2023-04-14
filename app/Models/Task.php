@@ -25,21 +25,6 @@ use Illuminate\Database\Eloquent\Casts\Attribute;
  * @property-read int|null $comments_count
  * @property-read \App\Models\User|null $owner
  * @property-read Task|null $parentTask
- * @method static \Database\Factories\TaskFactory factory($count = null, $state = [])
- * @method static \Illuminate\Database\Eloquent\Builder|Task newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|Task newQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|Task query()
- * @method static \Illuminate\Database\Eloquent\Builder|Task whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Task whereDescription($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Task whereDue($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Task whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Task whereOwnerId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Task whereParentTaskId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Task whereStatus($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Task whereTitle($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Task whereType($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Task whereUpdatedAt($value)
- * @mixin \Eloquent
  */
 class Task extends Model
 {

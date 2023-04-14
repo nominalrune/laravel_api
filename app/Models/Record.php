@@ -24,21 +24,6 @@ use Illuminate\Database\Eloquent\Casts\Attribute;
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Comment> $comments
  * @property-read int|null $comments_count
  * @property-read \App\Models\User $user
- * @method static \Database\Factories\RecordFactory factory($count = null, $state = [])
- * @method static \Illuminate\Database\Eloquent\Builder|Record newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|Record newQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|Record query()
- * @method static \Illuminate\Database\Eloquent\Builder|Record whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Record whereDate($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Record whereDescription($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Record whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Record whereTime($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Record whereTitle($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Record whereTopicId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Record whereTopicType($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Record whereUpdatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Record whereUserId($value)
- * @mixin \Eloquent
  */
 class Record extends Model
 {

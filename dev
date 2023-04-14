@@ -3,5 +3,7 @@ alias sail='[ -f sail ] && bash sail || bash vendor/bin/sail'
 alias artisan='sail artisan'
 alias apigen='php tools/apigen'
 
-alias test='sail artisan test'
+alias ide='artisan ide-helper:generate && artisan ide-helper:models --nowrite && artisan ide-helper:meta'
+
+alias test='artisan test'
 
