@@ -28,8 +28,8 @@ class AuthenticationTest extends TestCase
                 $json->has(
                     'user',
                     fn (AssertableJson $userJson) =>
-                    $userJson->where('name', 'John Doe')
-                        ->where('email', 'john@doe.com')
+                    $userJson->where('name', $user->name)
+                        ->where('email', $user->email)
                         ->hasAll(['id','created_at', 'updated_at'])
                         ->missing('password')
                         ->etc()

@@ -17,7 +17,13 @@ class RecordFactory extends Factory
     public function definition()
     {
         return [
-            //
+            'title' => $this->faker->sentence,
+            'description' => $this->faker->paragraph,
+            // 'recordable_type' => $this->faker->randomElement([\App\Models\Task::factory()]),
+            // 'recordable_id' => $this->faker->randomElement([\App\Models\Task::factory()]),
+            'date' => $this->faker->dateTimeBetween('now', '+1 month'),
+            'time' => $this->faker->randomNumber(2),
+            // 'user_id' => \App\Models\User::factory(),
         ];
     }
 }

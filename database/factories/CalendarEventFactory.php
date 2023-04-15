@@ -19,11 +19,11 @@ class CalendarEventFactory extends Factory
     public function definition()
     {
         return [
-            'title' => 'title is a title',
-            'description' => 'description is a description',
-            'start_at' => new Carbon('2021-01-01T00:00'),
-            'end_at' => new Carbon('2021-01-01T01:00'),
-            'user_id' => 1,
+            'title' => $this->faker->sentence,
+            'description' => $this->faker->paragraph,
+            'start_at' => $this->faker->dateTimeBetween('now', '+1 hour'),
+            'end_at' => $this->faker->dateTimeBetween('+1 hour', '+2 hours'),
+            // 'user_id' => \App\Models\User::factory(),
         ];
     }
 }

@@ -55,7 +55,7 @@ class User extends Authenticatable
 
     public function tasks()
     {
-        return $this->hasMany(Task::class, 'owner_id');
+        return $this->hasMany(Task::class);
 
     }
     public function records()

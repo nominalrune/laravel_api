@@ -13,17 +13,14 @@ class IndexTest extends ApiTestCase
      */
     public function can_not_access_calendar_without_login(): void
     {
-        $response = $this->get('/api/calendar');
-
-        $response->assertStatus(401);
+        $this->get('/api/calendar')->assertStatus(401);
     }
     /**
      * @test
      */
     public function can_access_calendar_with_login(): void
     {
-        $response = $this->login()->get('/api/calendar');
-        $response->assertStatus(200);
+        $this->login()->get('/api/calendar')->assertStatus(200);
     }
     public function return_calendar_events_according_to_url_query(): void
     {
@@ -39,8 +36,7 @@ class IndexTest extends ApiTestCase
             'start_at' => '2021-01-01 00:00:00',
             'end_at' => '2021-01-01 01:00:00',
         ];
-        $response = $this->login()->get('/api/calendar');
-        $response->assertJson([
+        $this->login()->get('/api/calendar')->assertJson([
             'calendar_events' => [
                 [
                     'id' => 1,
