@@ -67,6 +67,15 @@ class PermissionService
         // ->with(['permissionable'])->get()
         // ->pluck('permissionable');
     }
+
+    /**
+     * @template T of Model
+     * @param User $user
+     * @param T::class $className
+     * @param 'read'|'create'|'update'|'delete'|'share' $permission
+     * @param bool $asQuery
+     * @return \Illuminate\Support\Collection<int, T>|\Illuminate\Database\Eloquent\Builder<T>
+     */
     public static function getAllAccessible($user, $className, $permission=Permission::READ,$asQuery=false){
         $query=$className::where('user_id', $user->id)
         ->orWhere('permissions.user_id',$user->id); // うまくいかなかったら↓に変える

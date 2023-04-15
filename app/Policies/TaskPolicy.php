@@ -31,11 +31,7 @@ class TaskPolicy
      */
     public function view(User $user,Task $task)
     {
-        Log::debug("view task @TaskPokicy", ['user' => $user, 'task' => $task]);
-        $count=$task->permissions;
-        Log::debug("view task @TaskPokicy", ['count' => $count]);
-        // return $count->where('user_id', $user->id)->where('permission_type','read') ->count()>0;
-        return true;
+        return $user->can('read', $task);
     }
 
     /**
@@ -56,11 +52,11 @@ class TaskPolicy
      * @param  \App\Models\Task  $task
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function update(User $user)
+    public function update(User $user, Task $task)
     {
         // Log::debug("@TaskPolicy::update ", ['user' => $user]);
 
-        return true;
+        return $user->can('update', $task);
     }
 
     /**
@@ -72,7 +68,7 @@ class TaskPolicy
      */
     public function delete(User $user, Task $task)
     {
-        return true;
+        return $user->can('delete', $task);
     }
 
     /**
@@ -84,7 +80,7 @@ class TaskPolicy
      */
     public function restore(User $user, Task $task)
     {
-        return true;
+        return $user->can('delete', $task);
     }
 
     /**

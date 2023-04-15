@@ -28,10 +28,10 @@ class RecordPolicy
      * @param  \App\Models\Record  $record
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function view(User $user,)
+    public function view(User $user, Record $record)
     {
         // return $record->acl($user)->read;
-        return true;
+        return $user->can('read', $record);
     }
 
     /**
@@ -54,7 +54,7 @@ class RecordPolicy
      */
     public function update(User $user, Record $record)
     {
-        return true;
+        return $user->can('update', $record);
     }
 
     /**
@@ -66,7 +66,7 @@ class RecordPolicy
      */
     public function delete(User $user, Record $record)
     {
-        return true;
+        return $user->can('delete', $record);
     }
 
     /**
@@ -78,7 +78,7 @@ class RecordPolicy
      */
     public function restore(User $user, Record $record)
     {
-        return $record->acl($user)->delete;
+        return $user->can('delete', $record);
     }
 
     /**

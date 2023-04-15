@@ -18,22 +18,23 @@ class RecordController extends Controller
      */
     public function index(RecordRequest $request)
     {
+        switch($request->string('show','')){
+            case 'all':
+                $recordsQuery=PermissionService::getAllAccessible($request->user(), Record::class,Permission::READ,true);
+                break;
+            case 'shared':
+                $recordsQuery=PermissionService::getShared($request->user(), Record::class,Permission::READ,true);
+                break;
+            default:
+                $recordsQuery=$request->user()->records();
+                break;
+        }
+
         $date=($request->date('month')??now());
         $date_start=$date->copy()->startOfMonth()->toDateString();
         $date_end=$date->copy()->endOfMonth()->toDateString();
-        switch($request->string('show','')){
-            case 'all':
-                $recordsQuery=PermissionService::getAllAccessible($request->user(), Record::class,true)->with(['comments']);
-                break;
-            case 'shared':
-                $recordsQuery=PermissionService::getShared($request->user(), Record::class,Permission::READ,true)->with(['comments']);
-                break;
-            default:
-                $recordsQuery=$request->user()->records()
-                ->whereBetween('date',[$date_start,$date_end])
-                ->with(['comments']);
-                break;
-        }
+        $records=$recordsQuery->whereBetween('date',[$date_start,$date_end])
+        ->with(['comments'])->get();
 
         return response()->json($records);
     }
@@ -45,7 +46,6 @@ class RecordController extends Controller
      */
     public function store(RecordRequest $request)
     {
-        // Log::debug("RecordController@store", ['request' => $request->all()]);
         $record = Record::create($request->validated());
         PermissionService::setOwnerShip($request->user(), $record);
         return response()->json($record, 201);
@@ -54,32 +54,27 @@ class RecordController extends Controller
     /**
      * Display the specified resource.
      *
-     * @return \Illuminate\Http\JsonResponse
+     * @return \Illuminate\Http\JsonResponse|\Illuminate\Http\Response
      */
-    public function show(RecordRequest $request, int $id)
+    public function show(RecordRequest $request, Record $record)
     {
-        $record=Record::find($id);
-        Permission::where('target_type',Record::class)
-        ->where('target_id',$id)
-        ->where('user_id',$request->user()->id)
-        ->where('permission_type','read')->firstOrFail();
-        $record->loadMissing(['comments']);
-        // Log::debug("RecordController@show", ['record' => $record]);
-        // $this->authorize('view', $record);
-        return $record;
+        if($request->user()->can(Permission::READ, $record )){
+            $record->load('comments');
+            return response()->json($record);
+        }else{
+            return response(status:404);
+        }
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\Response|\Illuminate\Http\JsonResponse
      */
-    public function update(RecordRequest $request, int $id)
+    public function update(RecordRequest $request, Record $record)
     {
-        // $this->authorize('update', $record);
-        $record = Record::find($id);
         $record->update($request->validated());
-        return $record->with('related_task');
+        return response()->json($record->load('related_task'));
     }
 
     /**
@@ -87,10 +82,8 @@ class RecordController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function destroy(RecordRequest $request, int $id)
+    public function destroy(RecordRequest $request, Record $record)
     {
-        $record = Record::find($id);
-        $this->authorize('delete', $record);
         $record->delete();
         return response()->noContent();
     }

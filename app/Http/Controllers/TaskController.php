@@ -6,6 +6,7 @@ use App\Http\Requests\StoreTaskRequest;
 use App\Http\Requests\TaskRequest;
 use App\Models\Permission;
 use App\Models\Task;
+use App\Services\PermissionService;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Http\Request;
 
@@ -18,7 +19,24 @@ class TaskController extends Controller
      */
     public function index(TaskRequest $request)
     {
-        return response()->json($request->user()->tasks);
+        switch($request->string('show','')){
+            case 'all':
+                $tasksQuery=PermissionService::getAllAccessible($request->user(), Task::class,Permission::READ,true);
+                break;
+            case 'shared':
+                $tasksQuery=PermissionService::getShared($request->user(), Task::class,Permission::READ,true);
+                break;
+            default:
+                $tasksQuery=$request->user()->tasks();
+                break;
+        }
+
+        $date=($request->date('month')??now());
+        $date_start=$date->copy()->startOfMonth()->toDateString();
+        $date_end=$date->copy()->endOfMonth()->toDateString();
+        $tasks=$tasksQuery->whereBetween('date',[$date_start,$date_end])
+        ->with(['comments'])->get();
+        return response()->json($tasks);
     }
 
     /**
@@ -28,8 +46,13 @@ class TaskController extends Controller
      */
     public function show(TaskRequest $request, int $id)
     {
-        $task=$request->user()->tasks()->findOrFail($request->id);
-        return response()->json($task);
+        $task=Task::find($id);
+        if($request->user()->can(Permission::READ, $task )){
+            $task->load('comments');
+            return response()->json($task);
+        }else{
+            return response(status:404);
+        }
     }
     /**
      * Store a newly created resource in storage.
@@ -39,17 +62,7 @@ class TaskController extends Controller
     public function store(TaskRequest $request)
     {
         $task = Task::create($request->validated());
-        // if ($task->owner_id != $request->user()->id) {
-        //     foreach (['read', 'write', 'delete'] as $permission) {
-        //         Permission::create([
-        //             'user_id' => $request->user()->id,
-        //             'target_type' => Task::class,
-        //             'target_id' => $task->id,
-        //             'permission_type' => $permission,
-        //         ]);
-        //     }
-        // }
-
+        PermissionService::setOwnerShip($request->user(), $task);
         return response()->json($task, 201);
     }
 
@@ -61,10 +74,13 @@ class TaskController extends Controller
      */
     public function update(TaskRequest $request, int $id)
     {
-        $task= $request->user()->tasks()->findOrFail($id);
+
+        $task = Task::find($id);
+        if(!$request->user()->can(Permission::UPDATE, $task)){
+            return response(status:404);
+        }
         $task->update($request->validated());
-        // Log::debug(['task' => $task]);
-        return response()->json($task, 200);
+        return response()->json($task->load('parent_task'));
     }
 
     /**
@@ -74,8 +90,12 @@ class TaskController extends Controller
      */
     public function destroy(TaskRequest $request, int $id)
     {
-        $task= $request->user()->tasks()->findOrFail($id);
+        $task = Task::find($id);
+        if(!$request->user()->can(Permission::DELETE, $task)){
+            return response(status:404);
+        }
+
         $task->delete();
-        return response(status:204);
+        return response()->noContent();
     }
 }

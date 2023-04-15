@@ -3,6 +3,7 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use App\Services\PermissionService;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -52,6 +53,11 @@ class User extends Authenticatable
     protected $appends = [
         'url'
     ];
+
+    public function can($permission, $permittable)
+    {
+        return PermissionService::can($this, $permittable, $permission);
+    }
 
     public function tasks()
     {
