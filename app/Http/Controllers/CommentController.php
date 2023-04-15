@@ -15,13 +15,13 @@ class CommentController extends Controller
         $comment->user_id = $request->user()->id;
         $comment->commentable_type = $request->input('commentable_type');
         $comment->commentable_id = $request->input('commentable_id');
-        $comment->body = $request->input('body');
+        $comment->content = $request->input('content');
         $comment->save();
     }
     public function update(Request $request)
     {
         $comment = Comment::find($request->integer('id'));
-        $comment->body = $request->input('body');
+        $comment->content = $request->input('content');
         $comment->save();
     }
     public function destroy(Request $request)

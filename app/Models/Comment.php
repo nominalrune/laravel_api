@@ -15,14 +15,14 @@ use Illuminate\Database\Eloquent\Casts\Attribute;
  * @property int $user_id
  * @property string $commentable_type
  * @property int $commentable_id
- * @property string $body
+ * @property string $content
  * @property-read Model|\Eloquent $commentable
  */
 class Comment extends Model
 {
     use HasFactory;
     protected $fillable = [
-        'body',
+        'content',
         'user_id',
         'commentable_id',
         'commentable_type',
