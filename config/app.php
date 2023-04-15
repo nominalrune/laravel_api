@@ -71,7 +71,8 @@ return [
     |
     */
 
-    'timezone' => 'Asia/Tokyo',
+    // 'timezone' => 'Asia/Tokyo',
+    'timezone' => 'UTC',
 
     /*
     |--------------------------------------------------------------------------
@@ -110,7 +111,7 @@ return [
     |
     */
 
-    'faker_locale' => 'en_US',
+    'faker_locale' => 'ja_JP',
 
     /*
     |--------------------------------------------------------------------------
@@ -157,7 +158,7 @@ return [
     */
 
     'providers' => [
-        Vyuldashev\LaravelOpenApi\OpenApiServiceProvider::class,
+        // Vyuldashev\LaravelOpenApi\OpenApiServiceProvider::class,
         /*
          * Laravel Framework Service Providers...
          */

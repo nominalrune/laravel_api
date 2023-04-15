@@ -20,10 +20,10 @@ return new class extends Migration
             $table->timestamps();
             $table->string('title');
             $table->text('description')->nullable();
-            $table->nullableMorphs('topic');
-            $table->date('date')->nullable();
+            $table->nullableMorphs('recordable');
+            $table->date('date');
             $table->unsignedInteger('time')->nullable();
-            $table->foreignIdFor(User::class, 'user_id');
+            $table->foreignIdFor(User::class);
         });
     }
 

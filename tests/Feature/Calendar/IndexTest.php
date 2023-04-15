@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Feature\api\calendar_events;
+namespace Tests\Feature\Calendar;
 
 use App\Models\CalendarEvent;
 use App\Models\User;

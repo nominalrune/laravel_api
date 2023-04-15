@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreTaskRequest;
-use App\Http\Requests\UpdateTaskRequest;
+use App\Http\Requests\TaskRequest;
 use App\Models\Permission;
 use App\Models\Task;
 use Illuminate\Support\Facades\Log;
@@ -14,77 +14,68 @@ class TaskController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function index(Request $request)
+    public function index(TaskRequest $request)
     {
-        return $request->user()->tasks;
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \App\Http\Requests\StoreTaskRequest  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(StoreTaskRequest $request)
-    {
-        $request->mergeIfMissing(['owner_id' => $request->user()->id]);
-        $inputs = $request->all();
-        Log::debug($inputs);
-        $task = Task::create($inputs);
-        if ($task->owner_id != $request->user()->id) {
-            foreach (['read', 'write', 'delete'] as $permission) {
-                Permission::create([
-                    'user_id' => $request->user()->id,
-                    'target_type' => Task::class,
-                    'target_id' => $task->id,
-                    'permission_type' => $permission,
-                ]);
-            }
-        }
-
-        return $task;
+        return response()->json($request->user()->tasks);
     }
 
     /**
      * Display the specified resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function show(Request $request)
+    public function show(TaskRequest $request, int $id)
     {
-        $task = Task::findOrFail($request->id);
-        // $this->authorize('view', $task); //FIXME not working
-        // Log::debug(['task' => $task]);
-        return $task;
+        $task=$request->user()->tasks()->findOrFail($request->id);
+        return response()->json($task);
     }
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function store(TaskRequest $request)
+    {
+        $task = Task::create($request->validated());
+        // if ($task->owner_id != $request->user()->id) {
+        //     foreach (['read', 'write', 'delete'] as $permission) {
+        //         Permission::create([
+        //             'user_id' => $request->user()->id,
+        //             'target_type' => Task::class,
+        //             'target_id' => $task->id,
+        //             'permission_type' => $permission,
+        //         ]);
+        //     }
+        // }
+
+        return response()->json($task, 201);
+    }
+
 
     /**
      * Update the specified resource in storage.
      *
-     * @param  \App\Http\Requests\UpdateTaskRequest  $request
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function update(UpdateTaskRequest $request, int $id)
+    public function update(TaskRequest $request, int $id)
     {
-        $task= Task::findOrFail($id);
-        $this->authorize('update', $task);
+        $task= $request->user()->tasks()->findOrFail($id);
         $task->update($request->validated());
-        Log::debug(['task' => $task]);
-        return response($task);
+        // Log::debug(['task' => $task]);
+        return response()->json($task, 200);
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\Task $task
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Task $task)
+    public function destroy(TaskRequest $request, int $id)
     {
-        $this->authorize('delete', $task);
+        $task= $request->user()->tasks()->findOrFail($id);
         $task->delete();
-        return response()->noContent();
+        return response(status:204);
     }
 }

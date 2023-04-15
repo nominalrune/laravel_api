@@ -27,12 +27,19 @@ class Comment extends Model
         'commentable_id',
         'commentable_type',
     ];
+    protected $with = [
+        'user',
+    ];
     protected $appends = [
         'url'
     ];
     public function commentable()
     {
         return $this->morphTo();
+    }
+    public function user()
+    {
+        return $this->belongsTo(User::class);
     }
     protected function url(): Attribute
     {

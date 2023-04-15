@@ -136,7 +136,7 @@ namespace App\Models{
  * @property string|null $due
  * @property string|null $description
  * @property int|null $owner_id
- * @property int $status
+ * @property int $state
  * @property int|null $parent_task_id
  * @property-read \Illuminate\Database\Eloquent\Collection<int, Task> $childTasks
  * @property-read int|null $child_tasks_count
@@ -156,7 +156,7 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|Task whereId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Task whereOwnerId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Task whereParentTaskId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Task whereStatus($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Task whereState($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Task whereTitle($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Task whereType($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Task whereUpdatedAt($value)

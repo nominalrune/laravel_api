@@ -18,12 +18,12 @@ return new class extends Migration
         Schema::create('tasks', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
-            $table->string('type');
             $table->string('title');
             $table->date('due')->nullable();
             $table->text('description')->nullable();
-            $table->foreignIdFor(User::class, 'owner_id')->nullable();
-            $table->integer('status')->default(0);
+            $table->foreignIdFor(User::class);
+            $table->json('subtasks')->nullable();
+            $table->integer('state')->default(0);
             $table->foreignIdFor(Task::class,'parent_task_id')->nullable();
         });
     }

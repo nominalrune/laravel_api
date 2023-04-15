@@ -80,7 +80,7 @@ class ExtendedTaskProps extends ExtendedProps{
     public $entry_type=Task::class;
     public $due;
     public $task_type;
-    public $status;
+    public $state;
     public $parent_task_id;
     public $parentTask;
     public function __construct(Task $task)
@@ -88,7 +88,7 @@ class ExtendedTaskProps extends ExtendedProps{
         parent::__construct($task);
         $this->due=$task->due;
         $this->task_type=$task->task_type;
-        $this->status=$task->status;
+        $this->state=$task->state;
         $this->parent_task_id=$task->parent_task_id;
         $this->parentTask=$task->parentTask;
     }
@@ -103,7 +103,7 @@ class ExtendedTaskProps extends ExtendedProps{
             'updated_at'=>$this->updated_at,
             'due'=>$this->due,
             'task_type'=>$this->task_type,
-            'status'=>$this->status,
+            'state'=>$this->state,
             'parent_task_id'=>$this->parent_task_id,
             'parentTask'=>$this->parentTask,
         ];
@@ -141,13 +141,13 @@ class ExtendedRecordProps extends ExtendedProps{
 }
 class ExtendedCalendarEventProps extends ExtendedProps{
     public $entry_type=CalendarEvent::class;
-    public $status;
+    public $state;
     public $start_at;
     public $end_at;
     public function __construct(CalendarEvent $event)
     {
         parent::__construct($event);
-        $this->status=$event->status;
+        $this->state=$event->state;
         $this->start_at=$event->start_at;
         $this->end_at=$event->end_at;
     }
@@ -160,7 +160,7 @@ class ExtendedCalendarEventProps extends ExtendedProps{
             'description'=>$this->description,
             'created_at'=>$this->created_at,
             'updated_at'=>$this->updated_at,
-            'status'=>$this->status,
+            'state'=>$this->state,
             'start_at'=>$this->start_at,
             'end_at'=>$this->end_at,
         ];

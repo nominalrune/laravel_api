@@ -12,38 +12,42 @@ use Illuminate\Database\Eloquent\Casts\Attribute;
  * @property int $id
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
- * @property string $type
  * @property string $title
  * @property string|null $due
  * @property string|null $description
- * @property int|null $owner_id
- * @property int $status
+ * @property int|null $user_id
+ * @property int $state
  * @property int|null $parent_task_id
  * @property-read \Illuminate\Database\Eloquent\Collection<int, Task> $childTasks
  * @property-read int|null $child_tasks_count
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Comment> $comments
  * @property-read int|null $comments_count
- * @property-read \App\Models\User|null $owner
+ * @property-read \App\Models\User|null $user
  * @property-read Task|null $parentTask
  */
 class Task extends Model
 {
     use HasFactory;
-    protected $fillable=[
-        'type',
+    protected $fillable = [
         'title',
         'due',
         'description',
-        'owner_id',
-        'status',
+        'user_id',
+        'state',
         'parent_task_id',
+        'subtasks',
     ];
     protected $appends = [
         'url'
     ];
-    public function owner()
+    protected $casts = [
+        'due' => 'date',
+        'subtasks' => 'array',
+    ];
+
+    public function user()
     {
-        return $this->belongsTo(User::class, 'owner_id', 'id');
+        return $this->belongsTo(User::class);
     }
     public function parentTask()
     {

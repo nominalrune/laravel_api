@@ -8,6 +8,8 @@ use Illuminate\Database\Eloquent\Model;
 use App\Models\Task;
 use App\Models\User;
 
+
+
 /**
  * App\Models\Permission
  *
@@ -22,6 +24,20 @@ use App\Models\User;
 class Permission extends Model
 {
     use HasFactory;
+    public const READ = 'read';
+    public const CREATE = 'create';
+    public const UPDATE = 'update';
+    public const DELETE = 'delete';
+    public const SHARE = 'share';
+    public const PERMISSIONS = [
+        self::READ,
+        self::CREATE,
+        self::UPDATE,
+        self::DELETE,
+        self::SHARE,
+    ];
+
+
     public $timestamps = false;
     protected $fillable = [
         'target_type',
@@ -30,7 +46,7 @@ class Permission extends Model
         'user_id',
     ];
 
-    public function target()
+    public function permissionable()
     {
         return $this->morphTo('target', 'target_type', 'target_id');
     }
@@ -38,4 +54,5 @@ class Permission extends Model
     {
         return $this->belongsTo(User::class);
     }
+
 }

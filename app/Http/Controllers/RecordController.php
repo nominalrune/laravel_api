@@ -2,9 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\StoreRecordRequest;
-use App\Http\Requests\UpdateRecordRequest;
+use App\Http\Requests\RecordRequest;
+use App\Models\Permission;
 use App\Models\Record;
+use App\Services\PermissionService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 
@@ -13,44 +14,57 @@ class RecordController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function index(Request $request)
+    public function index(RecordRequest $request)
     {
-        Log::debug("RecordController@index", ['request' => $request->all(),'date'=>$request->date('month')]);
         $date=($request->date('month')??now());
         $date_start=$date->copy()->startOfMonth()->toDateString();
         $date_end=$date->copy()->endOfMonth()->toDateString();
-        $records=Record::whereBetween('date',[$date_start,$date_end])->with(['comments'])->get();
-        Log::debug("RecordController@index", ['date_end'=>$date_end,'records' => $records]);
-        return $records;
+        switch($request->string('show','')){
+            case 'all':
+                $recordsQuery=PermissionService::getAllAccessible($request->user(), Record::class,true)->with(['comments']);
+                break;
+            case 'shared':
+                $recordsQuery=PermissionService::getShared($request->user(), Record::class,Permission::READ,true)->with(['comments']);
+                break;
+            default:
+                $recordsQuery=$request->user()->records()
+                ->whereBetween('date',[$date_start,$date_end])
+                ->with(['comments']);
+                break;
+        }
+
+        return response()->json($records);
     }
 
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \App\Http\Requests\StoreRecordRequest  $request
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function store(StoreRecordRequest $request)
+    public function store(RecordRequest $request)
     {
-        Log::debug("RecordController@store", ['request' => $request->all()]);
+        // Log::debug("RecordController@store", ['request' => $request->all()]);
         $record = Record::create($request->validated());
-        return $record;
+        PermissionService::setOwnerShip($request->user(), $record);
+        return response()->json($record, 201);
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function show(int $id)
+    public function show(RecordRequest $request, int $id)
     {
         $record=Record::find($id);
+        Permission::where('target_type',Record::class)
+        ->where('target_id',$id)
+        ->where('user_id',$request->user()->id)
+        ->where('permission_type','read')->firstOrFail();
         $record->loadMissing(['comments']);
-        Log::debug("RecordController@show", ['record' => $record]);
+        // Log::debug("RecordController@show", ['record' => $record]);
         // $this->authorize('view', $record);
         return $record;
     }
@@ -58,11 +72,9 @@ class RecordController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \App\Http\Requests\UpdateRecordRequest  $request
-     * @param  \App\Models\Record  $record
      * @return \Illuminate\Http\Response
      */
-    public function update(UpdateRecordRequest $request, int $id)
+    public function update(RecordRequest $request, int $id)
     {
         // $this->authorize('update', $record);
         $record = Record::find($id);
@@ -73,10 +85,9 @@ class RecordController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\Record  $record
      * @return \Illuminate\Http\Response
      */
-    public function destroy(int $id)
+    public function destroy(RecordRequest $request, int $id)
     {
         $record = Record::find($id);
         $this->authorize('delete', $record);
