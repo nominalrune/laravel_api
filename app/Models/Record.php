@@ -32,8 +32,8 @@ class Record extends Model
         'title',
         'description',
         'user_id',
-        'topic_type',
-        'topic_id',
+        'recordable_type',
+        'recordable_id',
         'date',
         'time',
     ];

@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Database\QueryException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\ValidationException;
 use Throwable;
 
@@ -47,17 +48,23 @@ class Handler extends ExceptionHandler
      */
     public function register()
     {
-        $this->renderable(function (ModelNotFoundException $e, Request $request) {
-            return response(status: 404);
-        });
-        $this->renderable(function (ValidationException $e, Request $request) {
-            return response(status: 422);
-        });
+        // $this->renderable(function (ModelNotFoundException $e, Request $request) {
+        //     return response(status: 404)->withException($e);
+        // });
+        // $this->renderable(function (ValidationException $e, Request $request) {
+        //     return response(status: 422);
+        // });
         $this->renderable(function (QueryException $e, Request $request) {
-            return response(status: 422);
+            $this->log($e, $request);
+            return response()->json(['message' => 'Failed to proccess invalid request.'], 422);
         });
         $this->reportable(function (Throwable $e) {
             //
         });
+    }
+
+    private function log(Throwable $e, Request $request)
+    {
+        Log::error($e->getMessage(), ['request' => 'user_id: ' . $request->user()->id . ', url: ' . $request->fullUrl() . ', method: ' . $request->method() . ', ip: ' . $request->ip(), 'trace' => $e->getTraceAsString()]);
     }
 }

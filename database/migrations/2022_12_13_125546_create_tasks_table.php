@@ -22,7 +22,7 @@ return new class extends Migration
             $table->date('due')->nullable();
             $table->text('description')->nullable();
             $table->foreignIdFor(User::class);
-            $table->json('subtasks')->nullable();
+            $table->jsonb('subtasks')->nullable();
             $table->integer('state')->default(0);
             $table->foreignIdFor(Task::class,'parent_task_id')->nullable();
         });

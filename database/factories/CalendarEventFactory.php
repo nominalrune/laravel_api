@@ -19,7 +19,7 @@ class CalendarEventFactory extends Factory
     public function definition()
     {
         return [
-            'title' => $this->faker->sentence,
+            'title' => $this->faker->words(3, true),
             'description' => $this->faker->paragraph,
             'start_at' => $this->faker->dateTimeBetween('now', '+1 hour'),
             'end_at' => $this->faker->dateTimeBetween('+1 hour', '+2 hours'),

@@ -57,10 +57,10 @@ class Task extends Model
     {
         return $this->hasMany(Task::class, 'parent_task_id', 'id');
     }
-    // public function permissions()
-    // {
-    //     return $this->morphMany(Permission::class, 'target');
-    // }
+    public function permissions()
+    {
+        return $this->morphMany(Permission::class, 'permissionable');
+    }
     public function comments()
     {
         return $this->morphMany(Comment::class, 'commentable');

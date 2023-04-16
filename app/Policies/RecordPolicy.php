@@ -4,6 +4,7 @@ namespace App\Policies;
 
 use App\Models\Record;
 use App\Models\User;
+use App\Services\PermissionService;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
 class RecordPolicy
@@ -31,7 +32,7 @@ class RecordPolicy
     public function view(User $user, Record $record)
     {
         // return $record->acl($user)->read;
-        return $user->can('read', $record);
+        return PermissionService::can($user,  $record, 'read');
     }
 
     /**
@@ -54,7 +55,7 @@ class RecordPolicy
      */
     public function update(User $user, Record $record)
     {
-        return $user->can('update', $record);
+        return PermissionService::can($user,  $record, 'update');
     }
 
     /**
@@ -66,7 +67,7 @@ class RecordPolicy
      */
     public function delete(User $user, Record $record)
     {
-        return $user->can('delete', $record);
+        return PermissionService::can($user,  $record, 'delete');
     }
 
     /**
@@ -78,7 +79,7 @@ class RecordPolicy
      */
     public function restore(User $user, Record $record)
     {
-        return $user->can('delete', $record);
+        return PermissionService::can($user,  $record, 'delete');
     }
 
     /**

@@ -40,8 +40,8 @@ class Permission extends Model
 
     public $timestamps = false;
     protected $fillable = [
-        'target_type',
-        'target_id',
+        'permissionable_type',
+        'permissionable_id',
         'permission_type',
         'user_id',
     ];

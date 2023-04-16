@@ -7,6 +7,7 @@ use App\Http\Requests\TaskRequest;
 use App\Models\Permission;
 use App\Models\Task;
 use App\Services\PermissionService;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Http\Request;
 
@@ -19,24 +20,40 @@ class TaskController extends Controller
      */
     public function index(TaskRequest $request)
     {
-        switch($request->string('show','')){
+        switch ($request->string('range', '')) {
             case 'all':
-                $tasksQuery=PermissionService::getAllAccessible($request->user(), Task::class,Permission::READ,true);
+                $tasksQuery = PermissionService::getAllAccessible(
+                    $request->user(),
+                    Task::class,
+                    Permission::READ,
+                    true
+                );
+                // dump($tasksQuery);
                 break;
             case 'shared':
-                $tasksQuery=PermissionService::getShared($request->user(), Task::class,Permission::READ,true);
+                $tasksQuery = PermissionService::getShared(
+                    $request->user(),
+                    Task::class,
+                    Permission::READ,
+                    true
+                );
+                // dump($tasksQuery->get()->toArray());
                 break;
+            case 'mine':
             default:
-                $tasksQuery=$request->user()->tasks();
+                $tasksQuery = $request->user()->tasks();
+                // dump($tasksQuery);
                 break;
         }
-
-        $date=($request->date('month')??now());
-        $date_start=$date->copy()->startOfMonth()->toDateString();
-        $date_end=$date->copy()->endOfMonth()->toDateString();
-        $tasks=$tasksQuery->whereBetween('date',[$date_start,$date_end])
-        ->with(['comments'])->get();
-        return response()->json($tasks);
+        $request->whenFilled(
+            'month',
+            function (Carbon $month) use ($tasksQuery) {
+                $date_start = $month->copy()->startOfMonth()->tomonthString();
+                $date_end = $month->copy()->endOfMonth()->toDateString();
+                $tasksQuery->whereBetween('due', [$date_start, $date_end]);
+            }
+        );
+        return response()->json($tasksQuery->with(['comments'])->get());
     }
 
     /**
@@ -44,14 +61,13 @@ class TaskController extends Controller
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function show(TaskRequest $request, int $id)
+    public function show(TaskRequest $request, Task $task)
     {
-        $task=Task::find($id);
-        if($request->user()->can(Permission::READ, $task )){
+        if ($request->user()->can('view',$task)) {
             $task->load('comments');
             return response()->json($task);
-        }else{
-            return response(status:404);
+        } else {
+            return abort(404);
         }
     }
     /**
@@ -76,8 +92,8 @@ class TaskController extends Controller
     {
 
         $task = Task::find($id);
-        if(!$request->user()->can(Permission::UPDATE, $task)){
-            return response(status:404);
+        if (!$request->user()->can(Permission::UPDATE, $task)) {
+            return response(status: 404);
         }
         $task->update($request->validated());
         return response()->json($task->load('parent_task'));
@@ -91,8 +107,8 @@ class TaskController extends Controller
     public function destroy(TaskRequest $request, int $id)
     {
         $task = Task::find($id);
-        if(!$request->user()->can(Permission::DELETE, $task)){
-            return response(status:404);
+        if (!$request->user()->can(Permission::DELETE, $task)) {
+            return response(status: 404);
         }
 
         $task->delete();

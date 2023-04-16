@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Feature\Calendar;
+namespace Tests\Feature\CalendarEvent;
 
 use App\Models\CalendarEvent;
 use Carbon\Carbon;

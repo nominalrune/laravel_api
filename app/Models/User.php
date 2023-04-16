@@ -54,10 +54,10 @@ class User extends Authenticatable
         'url'
     ];
 
-    public function can($permission, $permittable)
-    {
-        return PermissionService::can($this, $permittable, $permission);
-    }
+    // public function can($permission, $permittable)
+    // {
+    //     return PermissionService::can($this, $permittable, $permission);
+    // }
 
     public function tasks()
     {
@@ -78,10 +78,10 @@ class User extends Authenticatable
             get: fn () => route('task.show', $this->id),
         );
     }
-    // public function permissions()
-    // {
-    //     return $this->hasMany(Permission::class);
-    // }
+    public function permissions()
+    {
+        return $this->hasMany(Permission::class);
+    }
     // public function allTasks()
     // {
     //     return $this->morphMany(Task::class, 'target');

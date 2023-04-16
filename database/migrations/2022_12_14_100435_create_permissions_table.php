@@ -16,7 +16,7 @@ return new class extends Migration
     {
         Schema::create('permissions', function (Blueprint $table) {
             $table->id();
-            $table->morphs('permissionable')->onDelete('cascade');
+            $table->morphs('permissionable');
             $table->foreignIdFor(User::class)->onDelete('cascade');
             $table->string('permission_type');
         });

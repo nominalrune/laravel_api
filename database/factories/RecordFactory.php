@@ -17,7 +17,7 @@ class RecordFactory extends Factory
     public function definition()
     {
         return [
-            'title' => $this->faker->sentence,
+            'title' => $this->faker->words(3, true),
             'description' => $this->faker->paragraph,
             // 'recordable_type' => $this->faker->randomElement([\App\Models\Task::factory()]),
             // 'recordable_id' => $this->faker->randomElement([\App\Models\Task::factory()]),

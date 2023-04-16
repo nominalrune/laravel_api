@@ -22,7 +22,7 @@ return new class extends Migration
             $table->text('description')->nullable();
             $table->nullableMorphs('recordable');
             $table->date('date');
-            $table->unsignedInteger('time')->nullable();
+            $table->unsignedInteger('time');
             $table->foreignIdFor(User::class);
         });
     }

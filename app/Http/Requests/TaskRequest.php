@@ -25,14 +25,15 @@ class TaskRequest extends FormRequest
         switch ($this->method()) {
             case 'GET':
                 return [
+                    'range' => ['nullable', 'string', 'in:all,shared,mine'],
                     'word' => ['nullable', 'string', 'max:255'],
                     'state' => ['nullable', 'integer', 'max:255'],
                     'user_id' => ['nullable', 'integer', 'exists:users,id'],
                 ];
             case 'POST':
                 return array_merge(
-                    $this->common,
-                    $this->required(['title',  'subtasks']),
+                    $this->columns,
+                    $this->required(['title', 'subtasks']),
                     $this->nullable(['id',]),
                 );
             case 'PUT':
@@ -56,12 +57,12 @@ class TaskRequest extends FormRequest
         'parent_task_id' => ['nullable', 'integer', 'exists:tasks,id'],
         'subtasks.*' => ['nullable', 'array'],
         'subtasks.*.title' => ['required', 'string', 'max:255'],
-        'subtasks.*.state' => ['required', 'integer', 'max:255'],
-        'subtasks.*.subtasks' => ['required', 'array'],
+        'subtasks.*.state' => ['required', 'integer', 'min:0','max:10'],
+        'subtasks.*.subtasks' => ['nullable', 'array'],
         'subtasks.*.subtasks.*' => ['nullable', 'array'],
         'subtasks.*.subtasks.*.title' => ['required', 'string', 'max:255'],
         'subtasks.*.subtasks.*.state' => ['required', 'integer', 'max:255'],
-        'subtasks.*.subtasks.*.subtasks' => ['required', 'array'],
+        'subtasks.*.subtasks.*.subtasks' => ['nullable', 'array'],
     ];
     private function nullable(array $keys)
     {

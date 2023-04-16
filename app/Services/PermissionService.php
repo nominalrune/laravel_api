@@ -9,18 +9,18 @@ use Illuminate\Database\Eloquent\Model;
 class PermissionService
 {
     /**
+     * @template T of Model
      * @param User $user
-     * @param Model $permittable
+     * @param T $permissionable
      * @param 'read'|'create'|'update'|'delete'|'share' $permission
      * @return bool
      */
-    public static function can(User $user, Model $permittable, string $permission)
+    public static function can(User $user, Model $permissionable, string $permission)
     {
-        $className = get_class($permittable);
-        return property_exists($className, 'user_id') && $user->id == $permittable->user_id
+        return $user->id == $permissionable?->user_id
             || $user->permissions()
-                ->where('permissionable_type', get_class($permittable))
-                ->where('permissionable_id', $permittable->id)
+                ->where('permissionable_type', get_class($permissionable))
+                ->where('permissionable_id', $permissionable->id)
                 ->where('permission_type', $permission)
                 ->exists();
     }
@@ -29,7 +29,7 @@ class PermissionService
         foreach (Permission::PERMISSIONS as $permission) {
             Permission::create([
                 'user_id' => $user->id,
-                'permissionable_type' => get_class($permittable),
+                'permissionable_type' => $permittable::class,
                 'permissionable_id' => $permittable->id,
                 'permission_type' => $permission,
             ]);
@@ -59,7 +59,7 @@ class PermissionService
      * @return \Illuminate\Support\Collection<int, T>|\Illuminate\Database\Eloquent\Builder<T>
      */
     public static function getShared($user, $className, $permission=Permission::READ,$asQuery=false){
-        $query = $className::whereHas('permissions', fn ($query) => $query->where('user_id', $user->id));
+        $query = $className::whereHas('permissions', fn ($permission) => $permission->where('user_id', $user->id));
         return $asQuery?$query:$query->get();
         // return $user->permissions()
         // ->where('permissionable_type', $className)
@@ -79,7 +79,7 @@ class PermissionService
     public static function getAllAccessible($user, $className, $permission=Permission::READ,$asQuery=false){
         $query=$className::where('user_id', $user->id)
         ->orWhere('permissions.user_id',$user->id); // うまくいかなかったら↓に変える
-        // ->orWhereHas('permissions', fn ($query)=>$query->where('user_id',$user->id))
+        // ->orWhereHas('permissions', fn ($permission)=>$permission->where('user_id',$user->id))
         return $asQuery?$query:$query->get();
     }
 

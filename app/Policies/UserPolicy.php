@@ -3,6 +3,7 @@
 namespace App\Policies;
 
 use App\Models\User;
+use App\Services\PermissionService;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
 class UserPolicy
@@ -29,7 +30,7 @@ class UserPolicy
      */
     public function view(User $user, User $targetUser)
     {
-        return $targetUser->acl($user)->read;
+        return PermissionService::can($user,  $targetUser, 'read');
     }
 
     /**
@@ -52,7 +53,7 @@ class UserPolicy
      */
     public function update(User $user, User $targetUser)
     {
-        return $targetUser->acl($user)->update;
+        return PermissionService::can($user,  $targetUser, 'update');
     }
 
     /**
@@ -64,7 +65,7 @@ class UserPolicy
      */
     public function delete(User $user, User $targetUser)
     {
-        return $targetUser->acl($user)->delete;
+        return PermissionService::can($user,  $targetUser, 'delete');
     }
 
     /**
@@ -76,7 +77,7 @@ class UserPolicy
      */
     public function restore(User $user, User $targetUser)
     {
-        return $targetUser->acl($user)->delete;
+        return PermissionService::can($user,  $targetUser, 'delete');
     }
 
     /**

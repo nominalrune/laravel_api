@@ -18,13 +18,14 @@ class RecordController extends Controller
      */
     public function index(RecordRequest $request)
     {
-        switch($request->string('show','')){
+        switch($request->string('range','')){
             case 'all':
                 $recordsQuery=PermissionService::getAllAccessible($request->user(), Record::class,Permission::READ,true);
                 break;
             case 'shared':
                 $recordsQuery=PermissionService::getShared($request->user(), Record::class,Permission::READ,true);
                 break;
+            case 'mine':
             default:
                 $recordsQuery=$request->user()->records();
                 break;

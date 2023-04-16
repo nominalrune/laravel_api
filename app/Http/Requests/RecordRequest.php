@@ -28,18 +28,18 @@ class RecordRequest extends FormRequest
                     'word' => ['nullable', 'string', 'max:255'],
                     'state' => ['nullable', 'integer', 'max:255'],
                     'user_id' => ['nullable', 'integer', 'exists:users,id'],// だれかほかの人の記録を指定する
-                    'show' =>['nullable', 'string', 'in:all,me,id']
+                    'mine' =>['nullable', 'string', 'in:all,shared,mine']
                 ];
             case 'POST':
                 return array_merge(
                     $this->required(['title','date','time']),
-                    $this->nullable(['state','task_id','description']),
+                    $this->nullable(['state','task_id','description','recordable_type','recordable_id']),
                 );
             case 'PUT':
             case 'PATCH':
                 return array_merge(
                     $this->required(['id']),
-                    $this->nullable(['title','state','user_id','task_id','date','time','description']),
+                    $this->nullable(['title','state','user_id','task_id','date','time','description','recordable_type','recordable_id']),
                 );
             default:
                 return [];
@@ -54,6 +54,8 @@ class RecordRequest extends FormRequest
         'date' => ['date_format:Y-m-d'],
         'time' => ['integer', 'max:1000'],
         'description' => ['string', 'max:50000'],
+        'recordable_type' => ['string', 'max:255'],
+        'recordable_id' => ['integer'],
     ];
     private function nullable(array $keys)
     {

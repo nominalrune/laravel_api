@@ -2,16 +2,21 @@
 
 namespace App\Policies;
 
-use App\Models\Permission;
-use App\Models\Task;
+use App\Models\CalendarEvent;
 use App\Models\User;
 use App\Services\PermissionService;
 use Illuminate\Auth\Access\HandlesAuthorization;
-use Illuminate\Support\Facades\Log;
 
-class TaskPolicy
+class CalendarEventPolicy
 {
     use HandlesAuthorization;
+    /**
+     * Create a new policy instance.
+     */
+    public function __construct()
+    {
+        //
+    }
 
     /**
      * Determine whether the user can view any models.
@@ -28,12 +33,13 @@ class TaskPolicy
      * Determine whether the user can view the model.
      *
      * @param  \App\Models\User  $user
-     * @param  \App\Models\Task  $task
+     * @param  \App\Models\CalendarEvent  $calendarEvent
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function view(User $user,Task $task)
+    public function view(User $user, CalendarEvent $calendarEvent)
     {
-        return PermissionService::can($user,  $task, Permission::READ);
+        // return $calendarEvent->acl($user)->read;
+        return PermissionService::can($user,  $calendarEvent, 'read');
     }
 
     /**
@@ -44,55 +50,53 @@ class TaskPolicy
      */
     public function create(User $user)
     {
-    return true;
+        return true;
     }
 
     /**
      * Determine whether the user can update the model.
      *
-     * @param  \App\Models\User  $user
-     * @param  \App\Models\Task  $task
+     * @param \App\Models\User  $user
+     * @param \App\Models\CalendarEvent  $calendarEvent
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function update(User $user, Task $task)
+    public function update(User $user, CalendarEvent $calendarEvent)
     {
-        // Log::debug("@TaskPolicy::update ", ['user' => $user]);
-
-        return PermissionService::can($user,  $task, Permission::UPDATE);
+        return PermissionService::can($user,  $calendarEvent, 'update');
     }
 
     /**
      * Determine whether the user can delete the model.
      *
      * @param  \App\Models\User  $user
-     * @param  \App\Models\Task  $task
+     * @param  \App\Models\CalendarEvent  $calendarEvent
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function delete(User $user, Task $task)
+    public function delete(User $user, CalendarEvent $calendarEvent)
     {
-        return PermissionService::can($user,  $task, Permission::DELETE);
+        return PermissionService::can($user,  $calendarEvent, 'delete');
     }
 
     /**
      * Determine whether the user can restore the model.
      *
      * @param  \App\Models\User  $user
-     * @param  \App\Models\Task  $task
+     * @param  \App\Models\CalendarEvent  $calendarEvent
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function restore(User $user, Task $task)
+    public function restore(User $user, CalendarEvent $calendarEvent)
     {
-        return PermissionService::can($user,  $task,Permission::DELETE);
+        return PermissionService::can($user,  $calendarEvent, 'delete');
     }
 
     /**
      * Determine whether the user can permanently delete the model.
      *
      * @param  \App\Models\User  $user
-     * @param  \App\Models\Task  $task
+     * @param  \App\Models\CalendarEvent  $calendarEvent
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function forceDelete(User $user, Task $task)
+    public function forceDelete(User $user, CalendarEvent $calendarEvent)
     {
         return false;
     }

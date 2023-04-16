@@ -13,6 +13,9 @@ class CalendarEntry
     // public $url;
     public ExtendedProps $extendedProps;
     public static function fromTask(Task $task):CalendarEntry{
+        if(! $task instanceof Task){
+            throw new \InvalidArgumentException("Invalid task type");
+        }
         $entry=new CalendarEntry();
         $entry->id="task-".strval($task->id);
         $entry->title=$task->title;
@@ -23,9 +26,12 @@ class CalendarEntry
         return $entry;
     }
     public static function fromRecord(Record $record):CalendarEntry{
+        if(! $record instanceof Record){
+            throw new \InvalidArgumentException("Invalid record type");
+        }
         $entry=new CalendarEntry();
         $entry->id="record-".strval($record->id);
-        $entry->title=$record->task->title;
+        $entry->title=$record->title;
         $entry->allDay=true;
         $entry->start=$record->date;
         // $entry->url=route('record.show', $record->id);
@@ -33,6 +39,9 @@ class CalendarEntry
         return $entry;
     }
     public static function fromCalendarEvent(CalendarEvent $event):CalendarEntry{
+        if(! $event instanceof CalendarEvent){
+            throw new \InvalidArgumentException("Invalid calendar event type");
+        }
         $entry=new CalendarEntry();
         $entry->id="event-".strval($event->id);
         $entry->title=$event->title;
