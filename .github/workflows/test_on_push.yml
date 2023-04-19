@@ -30,9 +30,9 @@ jobs:
       run: php artisan key:generate
     - name: Execute tests (Unit and Feature tests) via PHPUnit
       env:
-        MYSQL_HOST: 127.0.0.1
-        MYSQL_DATABASE: laravel
-        MYSQL_USERNAME: root
-        MYSQL_PASSWORD: password
-        MYSQL_PORT: ${{ job.services.mysql.ports[3306] }}
+        DB_HOST: 127.0.0.1
+        DB_DATABASE: laravel
+        DB_USERNAME: root
+        DB_PASSWORD: password
+        DB_PORT: ${{ job.services.mysql.ports[3306] }}
       run: vendor/bin/phpunit
