@@ -17,6 +17,7 @@ class RecordRequest extends FormRequest
             'user_id' => $this->user()->id,
         ]);
     }
+
     /**
      * @return array<string, mixed>
      */
@@ -27,24 +28,25 @@ class RecordRequest extends FormRequest
                 return [
                     'word' => ['nullable', 'string', 'max:255'],
                     'state' => ['nullable', 'integer', 'max:255'],
-                    'user_id' => ['nullable', 'integer', 'exists:users,id'],// だれかほかの人の記録を指定する
-                    'mine' =>['nullable', 'string', 'in:all,shared,mine']
+                    'user_id' => ['nullable', 'integer', 'exists:users,id'], // だれかほかの人の記録を指定する
+                    'mine' => ['nullable', 'string', 'in:all,shared,mine'],
                 ];
             case 'POST':
                 return array_merge(
-                    $this->required(['title','date','time']),
-                    $this->nullable(['state','task_id','description','recordable_type','recordable_id']),
+                    $this->required(['title', 'date', 'time']),
+                    $this->nullable(['state', 'task_id', 'description', 'recordable_type', 'recordable_id']),
                 );
             case 'PUT':
             case 'PATCH':
                 return array_merge(
                     $this->required(['id']),
-                    $this->nullable(['title','state','user_id','task_id','date','time','description','recordable_type','recordable_id']),
+                    $this->nullable(['title', 'state', 'user_id', 'task_id', 'date', 'time', 'description', 'recordable_type', 'recordable_id']),
                 );
             default:
                 return [];
         }
     }
+
     protected $columns = [
         'id' => ['integer', 'exists:tasks,id'],
         'title' => ['string', 'max:255'],
@@ -57,12 +59,14 @@ class RecordRequest extends FormRequest
         'recordable_type' => ['string', 'max:255'],
         'recordable_id' => ['integer'],
     ];
+
     private function nullable(array $keys)
     {
-        return array_map(fn($key) => [$key => [...$this->columns[$key], 'nullable']], $keys);
+        return array_map(fn ($key) => [$key => [...$this->columns[$key], 'nullable']], $keys);
     }
+
     private function required(array $keys)
     {
-        return array_map(fn($key) => [$key => [...$this->columns[$key], 'required']], $keys);
+        return array_map(fn ($key) => [$key => [...$this->columns[$key], 'required']], $keys);
     }
 }

@@ -13,10 +13,10 @@ class AuthenticatedSessionController extends Controller
     {
         return response()->json(['user' => Auth::user()], 200);
     }
+
     /**
      * Handle an incoming authentication request.
      *
-     * @param  \App\Http\Requests\Auth\LoginRequest  $request
      * @return \Illuminate\Http\Response
      */
     public function store(LoginRequest $request)
@@ -26,6 +26,7 @@ class AuthenticatedSessionController extends Controller
 
             $request->session()->regenerate();
             $user = Auth::user();
+
             return response()->json(['user' => $user], 200);
         } catch (\Exception $e) {
             return response()->json($e, 401);
@@ -35,7 +36,6 @@ class AuthenticatedSessionController extends Controller
     /**
      * Destroy an authenticated session.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
     public function destroy(Request $request)

@@ -5,7 +5,6 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-use Illuminate\Database\Eloquent\Casts\Attribute;
 /**
  * App\Models\CalendarEvent
  *
@@ -22,13 +21,15 @@ use Illuminate\Database\Eloquent\Casts\Attribute;
 class CalendarEvent extends Model
 {
     use HasFactory;
-    protected $fillable=[
+
+    protected $fillable = [
         'title',
         'description',
         'start_at',
         'end_at',
         'user_id',
     ];
+
     public function user()
     {
         return $this->belongsTo(User::class);

@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Models\Comment;
+use Illuminate\Http\Request;
 
 class CommentController extends Controller
 {
@@ -11,6 +11,7 @@ class CommentController extends Controller
     {
         return response()->json($request->user()->comments);
     }
+
     public function store(Request $request)
     {
         $comment = new Comment();
@@ -20,16 +21,17 @@ class CommentController extends Controller
         $comment->content = $request->input('content');
         $comment->save();
     }
+
     public function update(Request $request)
     {
         $comment = Comment::find($request->integer('id'));
         $comment->content = $request->input('content');
         $comment->save();
     }
+
     public function destroy(Request $request)
     {
         $comment = Comment::find($request->integer('id'));
         $comment->delete();
     }
-
 }

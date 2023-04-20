@@ -2,8 +2,6 @@
 
 namespace Tests\Feature\CalendarEvent;
 
-use App\Models\CalendarEvent;
-use Carbon\Carbon;
 use Tests\ApiTestCase;
 
 class IndexTest extends ApiTestCase
@@ -15,6 +13,7 @@ class IndexTest extends ApiTestCase
     {
         $this->get('/api/calendar_events')->assertStatus(401);
     }
+
     /**
      * @test
      */

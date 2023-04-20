@@ -24,12 +24,12 @@ class CalendarIndexRequest extends FormRequest
     public function rules()
     {
         return [
-            'display_type'=>['nullable','in:month,week,day'],
-            'start'=>['nullable','date_format:Y-m-d H:i:s'],
-            'end'=>['nullable','date_format:Y-m-d H:i:s'],
-            'event_type'=>['nullable','string'],
-            'user.*.id'=>['nullable','integer','exists:users,id'],
-            'status_type'=>['nullable','string'],
+            'display_type' => ['nullable', 'in:month,week,day'],
+            'start' => ['nullable', 'date_format:Y-m-d H:i:s'],
+            'end' => ['nullable', 'date_format:Y-m-d H:i:s'],
+            'event_type' => ['nullable', 'string'],
+            'user.*.id' => ['nullable', 'integer', 'exists:users,id'],
+            'status_type' => ['nullable', 'string'],
         ];
     }
 }

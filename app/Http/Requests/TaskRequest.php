@@ -17,6 +17,7 @@ class TaskRequest extends FormRequest
             'user_id' => $this->user()->id,
         ]);
     }
+
     /**
      * @return array<string, mixed>
      */
@@ -34,7 +35,7 @@ class TaskRequest extends FormRequest
                 return array_merge(
                     $this->columns,
                     $this->required(['title', 'subtasks']),
-                    $this->nullable(['id',]),
+                    $this->nullable(['id']),
                 );
             case 'PUT':
             case 'PATCH':
@@ -46,6 +47,7 @@ class TaskRequest extends FormRequest
                 return [];
         }
     }
+
     protected $columns = [
         'id' => ['integer', 'exists:tasks,id'],
         'title' => ['string', 'max:255'],
@@ -57,19 +59,21 @@ class TaskRequest extends FormRequest
         'parent_task_id' => ['nullable', 'integer', 'exists:tasks,id'],
         'subtasks.*' => ['nullable', 'array'],
         'subtasks.*.title' => ['required', 'string', 'max:255'],
-        'subtasks.*.state' => ['required', 'integer', 'min:0','max:10'],
+        'subtasks.*.state' => ['required', 'integer', 'min:0', 'max:10'],
         'subtasks.*.subtasks' => ['nullable', 'array'],
         'subtasks.*.subtasks.*' => ['nullable', 'array'],
         'subtasks.*.subtasks.*.title' => ['required', 'string', 'max:255'],
         'subtasks.*.subtasks.*.state' => ['required', 'integer', 'max:255'],
         'subtasks.*.subtasks.*.subtasks' => ['nullable', 'array'],
     ];
+
     private function nullable(array $keys)
     {
-        return array_map(fn($key) => [$key => [...$this->columns[$key], 'nullable']], $keys);
+        return array_map(fn ($key) => [$key => [...$this->columns[$key], 'nullable']], $keys);
     }
+
     private function required(array $keys)
     {
-        return array_map(fn($key) => [$key => [...$this->columns[$key], 'required']], $keys);
+        return array_map(fn ($key) => [$key => [...$this->columns[$key], 'required']], $keys);
     }
 }

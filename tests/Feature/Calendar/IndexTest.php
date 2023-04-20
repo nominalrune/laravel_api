@@ -3,9 +3,9 @@
 namespace Tests\Feature\Calendar;
 
 use App\Models\CalendarEvent;
-use App\Models\User;
-use Tests\ApiTestCase;
 use Illuminate\Support\Carbon;
+use Tests\ApiTestCase;
+
 class IndexTest extends ApiTestCase
 {
     /**
@@ -15,6 +15,7 @@ class IndexTest extends ApiTestCase
     {
         $this->get('/api/calendar')->assertStatus(401);
     }
+
     /**
      * @test
      */
@@ -22,6 +23,7 @@ class IndexTest extends ApiTestCase
     {
         $this->login()->get('/api/calendar')->assertStatus(200);
     }
+
     public function return_calendar_events_according_to_url_query(): void
     {
         $this->travelTo(Carbon::create(2021, 1, 1, 0, 0, 0));
@@ -32,7 +34,7 @@ class IndexTest extends ApiTestCase
             'end_at' => '2021-01-01 01:00:00',
             'user_id' => $this->user->id,
         ]);
-        $query=[
+        $query = [
             'start_at' => '2021-01-01 00:00:00',
             'end_at' => '2021-01-01 01:00:00',
         ];

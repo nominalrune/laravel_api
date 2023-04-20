@@ -2,14 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\StoreTaskRequest;
 use App\Http\Requests\TaskRequest;
 use App\Models\Permission;
 use App\Models\Task;
 use App\Services\PermissionService;
 use Carbon\Carbon;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Http\Request;
 
 class TaskController extends Controller
 {
@@ -53,6 +50,7 @@ class TaskController extends Controller
                 $tasksQuery->whereBetween('due', [$date_start, $date_end]);
             }
         );
+
         return response()->json($tasksQuery->with(['comments'])->get());
     }
 
@@ -63,13 +61,15 @@ class TaskController extends Controller
      */
     public function show(TaskRequest $request, Task $task)
     {
-        if ($request->user()->can('view',$task)) {
+        if ($request->user()->can('view', $task)) {
             $task->load('comments');
+
             return response()->json($task);
         } else {
             return abort(404);
         }
     }
+
     /**
      * Store a newly created resource in storage.
      *
@@ -79,9 +79,9 @@ class TaskController extends Controller
     {
         $task = Task::create($request->validated());
         PermissionService::setOwnerShip($request->user(), $task);
+
         return response()->json($task, 201);
     }
-
 
     /**
      * Update the specified resource in storage.
@@ -92,10 +92,11 @@ class TaskController extends Controller
     {
 
         $task = Task::find($id);
-        if (!$request->user()->can(Permission::UPDATE, $task)) {
+        if (! $request->user()->can(Permission::UPDATE, $task)) {
             return response(status: 404);
         }
         $task->update($request->validated());
+
         return response()->json($task->load('parent_task'));
     }
 
@@ -107,11 +108,12 @@ class TaskController extends Controller
     public function destroy(TaskRequest $request, int $id)
     {
         $task = Task::find($id);
-        if (!$request->user()->can(Permission::DELETE, $task)) {
+        if (! $request->user()->can(Permission::DELETE, $task)) {
             return response(status: 404);
         }
 
         $task->delete();
+
         return response()->noContent();
     }
 }

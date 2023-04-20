@@ -3,12 +3,12 @@
 namespace Tests\Feature\CalendarEvent;
 
 use App\Models\CalendarEvent;
-use Carbon\Carbon;
 use Tests\ApiTestCase;
 
 class ShowTest extends ApiTestCase
 {
     private CalendarEvent $calendarEvent;
+
     protected function setUp(): void
     {
         parent::setUp();
@@ -20,6 +20,7 @@ class ShowTest extends ApiTestCase
             'user_id' => $this->user->id,
         ]);
     }
+
     /**
      * @test
      */
@@ -36,6 +37,7 @@ class ShowTest extends ApiTestCase
             'user_id' => $this->calendarEvent->user_id,
         ]);
     }
+
     /**
      * @test
      */

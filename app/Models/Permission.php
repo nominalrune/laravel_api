@@ -4,9 +4,6 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-;
-use App\Models\Task;
-use App\Models\User;
 
 
 
@@ -24,11 +21,17 @@ use App\Models\User;
 class Permission extends Model
 {
     use HasFactory;
+
     public const READ = 'read';
+
     public const CREATE = 'create';
+
     public const UPDATE = 'update';
+
     public const DELETE = 'delete';
+
     public const SHARE = 'share';
+
     public const PERMISSIONS = [
         self::READ,
         self::CREATE,
@@ -37,8 +40,8 @@ class Permission extends Model
         self::SHARE,
     ];
 
-
     public $timestamps = false;
+
     protected $fillable = [
         'permissionable_type',
         'permissionable_id',
@@ -50,9 +53,9 @@ class Permission extends Model
     {
         return $this->morphTo('target', 'target_type', 'target_id');
     }
+
     public function user()
     {
         return $this->belongsTo(User::class);
     }
-
 }

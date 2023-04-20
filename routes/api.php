@@ -1,18 +1,11 @@
 <?php
 
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\TaskController;
-use App\Http\Controllers\RecordController;
-use App\Http\Controllers\UserController;
-use App\Models\Task;
-use App\Models\Record;
-use App\Models\User;
-use App\Models\Permission;
-use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\CalendarController;
 use App\Http\Controllers\CommentController;
-
+use App\Http\Controllers\RecordController;
+use App\Http\Controllers\TaskController;
+use App\Http\Controllers\UserController;
+use Illuminate\Support\Facades\Route;
 
 /*
 |--------------------------------------------------------------------------

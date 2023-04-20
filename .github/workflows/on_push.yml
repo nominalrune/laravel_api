@@ -36,3 +36,5 @@ jobs:
         DB_PASSWORD: password
         DB_PORT: ${{ job.services.mysql.ports[3306] }}
       run: vendor/bin/phpunit
+    - name: exec phpinsights
+      run: vendor/bin/phpinsights -n --ansi --format=github-action

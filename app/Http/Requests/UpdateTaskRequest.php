@@ -27,10 +27,10 @@ class UpdateTaskRequest extends FormRequest
             'title' => ['required', 'string', 'max:255'],
             'type' => ['required', 'string', 'max:255'],
             'due' => ['nullable', 'date_format:Y-m-d'],
-            'description' => ['nullable','string','max:50000'],
-            'state' => ['nullable','integer'],
+            'description' => ['nullable', 'string', 'max:50000'],
+            'state' => ['nullable', 'integer'],
             'owner_id' => ['integer', 'exists:users,id', 'nullable'],
-            'parent_task_id'=>[ 'integer', 'exists:tasks,id', 'nullable' ],
+            'parent_task_id' => ['integer', 'exists:tasks,id', 'nullable'],
         ];
     }
 }

@@ -4,16 +4,12 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use App\Services\PermissionService;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
-use App\Models\Task;
-use App\Models\Record;
-use App\Models\CalendarEvent;
 
-use Illuminate\Database\Eloquent\Casts\Attribute;
 /**
  * App\Models\User
  *
@@ -41,17 +37,20 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
-        'icon_url'
+        'icon_url',
     ];
+
     protected $hidden = [
         'password',
         'remember_token',
     ];
+
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
     protected $appends = [
-        'url'
+        'url',
     ];
 
     // public function can($permission, $permittable)
@@ -64,20 +63,24 @@ class User extends Authenticatable
         return $this->hasMany(Task::class);
 
     }
+
     public function records()
     {
         return $this->hasMany(Record::class);
     }
+
     public function calendarEvents()
     {
         return $this->hasMany(CalendarEvent::class);
     }
+
     protected function url(): Attribute
     {
         return Attribute::make(
             get: fn () => route('task.show', $this->id),
         );
     }
+
     public function permissions()
     {
         return $this->hasMany(Permission::class);

@@ -2,9 +2,9 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Casts\Attribute;
 
 /**
  * App\Models\Comment
@@ -21,26 +21,32 @@ use Illuminate\Database\Eloquent\Casts\Attribute;
 class Comment extends Model
 {
     use HasFactory;
+
     protected $fillable = [
         'content',
         'user_id',
         'commentable_id',
         'commentable_type',
     ];
+
     protected $with = [
         'user',
     ];
+
     protected $appends = [
-        'url'
+        'url',
     ];
+
     public function commentable()
     {
         return $this->morphTo();
     }
+
     public function user()
     {
         return $this->belongsTo(User::class);
     }
+
     protected function url(): Attribute
     {
         return Attribute::make(

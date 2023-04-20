@@ -2,10 +2,8 @@
 
 namespace Tests\Feature\Report;
 
-use App\Models\ReportEvent;
-use App\Models\User;
 use Tests\ApiTestCase;
-use Illuminate\Support\Carbon;
+
 class IndexTest extends ApiTestCase
 {
     /**

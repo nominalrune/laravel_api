@@ -70,7 +70,7 @@ return [
             'days' => 14,
         ],
 
-        'stdout' =>[
+        'stdout' => [
             'driver' => 'monologue',
             'path' => 'php://stdout',
             'level' => 'info',

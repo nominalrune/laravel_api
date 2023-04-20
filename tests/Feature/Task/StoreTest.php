@@ -9,7 +9,6 @@ use Tests\ApiTestCase;
 /**
  * @group task
  * @group task-store
- *
  */
 class StoreTest extends ApiTestCase
 {
@@ -18,8 +17,9 @@ class StoreTest extends ApiTestCase
         'description' => 'test description',
         'state' => 0,
         'due' => '2021-01-01',
-        'subtasks' => []
+        'subtasks' => [],
     ];
+
     protected function setUp(): void
     {
         parent::setUp();
@@ -34,8 +34,10 @@ class StoreTest extends ApiTestCase
         $response = $this->post('/api/tasks/', $this->validParams);
         $response->assertStatus(401);
     }
+
     /** creates one task
      * @test
+     *
      * @group task-show */
     public function can_create_task_with_login(): void
     {
@@ -43,15 +45,17 @@ class StoreTest extends ApiTestCase
             ->assertStatus(201)
             ->assertJson([...$this->validParams, 'due' => Carbon::parse($this->validParams['due'])->toISOString()]);
     }
+
     /** fail to create task with invalid params
      * @test
+     *
      * @group task-show */
     public function cannot_create_task_with_invalid_params(): void
     {
         $invalidParam = [
             ...$this->validParams,
             'title' => null,
-            'description' => 'over 50000' . str_pad('', 50000, 'a'),
+            'description' => 'over 50000'.str_pad('', 50000, 'a'),
             'state' => -1,
             'due' => '2021-01-99',
             'subtasks' => [
@@ -62,17 +66,17 @@ class StoreTest extends ApiTestCase
                         [
                             'title' => '',
                             'state' => 0,
-                            'subtasks'=>[]
-                        ]
-                    ]
-                        ], [
+                            'subtasks' => [],
+                        ],
+                    ],
+                ], [
                     'title' => 'over 255'.str_pad('', 255, 'a'),
                     'state' => 0,
-                ]
-            ]
+                ],
+            ],
         ];
         $this->login()->post('/api/tasks/', $invalidParam)->dump()
             ->assertStatus(422)
-            ->assertInvalid(['title','due','description','subtasks.0.title','subtasks.0.state','subtasks.1.title',]);
+            ->assertInvalid(['title', 'due', 'description', 'subtasks.0.title', 'subtasks.0.state', 'subtasks.1.title']);
     }
 }

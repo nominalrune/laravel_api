@@ -2,8 +2,8 @@
 
 namespace App\Services\Calendar\traits;
 
-use App\Models\CalendarEvent;
 use App\Http\Requests\CalendarEventStoreRequest;
+use App\Models\CalendarEvent;
 
 trait Create
 {
@@ -20,6 +20,7 @@ trait Create
             'user_id' => $request->user()->id,
         ];
     }
+
     /**
      * create a calendar event
      */
@@ -27,6 +28,7 @@ trait Create
     {
         $inputs = $this->parseInputs($request);
         $calendarEvent = CalendarEvent::create($inputs);
+
         return $calendarEvent;
     }
 }

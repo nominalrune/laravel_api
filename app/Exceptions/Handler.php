@@ -56,6 +56,7 @@ class Handler extends ExceptionHandler
         // });
         $this->renderable(function (QueryException $e, Request $request) {
             $this->log($e, $request);
+
             return response()->json(['message' => 'Failed to proccess invalid request.'], 422);
         });
         $this->reportable(function (Throwable $e) {
@@ -65,6 +66,6 @@ class Handler extends ExceptionHandler
 
     private function log(Throwable $e, Request $request)
     {
-        Log::error($e->getMessage(), ['request' => 'user_id: ' . $request->user()->id . ', url: ' . $request->fullUrl() . ', method: ' . $request->method() . ', ip: ' . $request->ip(), 'trace' => $e->getTraceAsString()]);
+        Log::error($e->getMessage(), ['request' => 'user_id: '.$request->user()->id.', url: '.$request->fullUrl().', method: '.$request->method().', ip: '.$request->ip(), 'trace' => $e->getTraceAsString()]);
     }
 }

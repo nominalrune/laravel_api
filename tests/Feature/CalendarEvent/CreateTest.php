@@ -9,6 +9,7 @@ use Tests\ApiTestCase;
 class CreateTest extends ApiTestCase
 {
     private array $attribute;
+
     protected function setUp(): void
     {
         parent::setUp();
@@ -20,6 +21,7 @@ class CreateTest extends ApiTestCase
             'user_id' => $this->user->id,
         ];
     }
+
     /**
      * @test
      */
@@ -28,6 +30,7 @@ class CreateTest extends ApiTestCase
         $response = $this->post('/api/calendar_events', $this->attribute);
         $response->assertStatus(401);
     }
+
     /**
      * @test
      */

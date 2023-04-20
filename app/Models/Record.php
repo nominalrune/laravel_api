@@ -2,11 +2,9 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
-
-use Illuminate\Database\Eloquent\Casts\Attribute;
 
 /**
  * App\Models\Record
@@ -28,6 +26,7 @@ use Illuminate\Database\Eloquent\Casts\Attribute;
 class Record extends Model
 {
     use HasFactory;
+
     protected $fillable = [
         'title',
         'description',
@@ -37,13 +36,16 @@ class Record extends Model
         'date',
         'time',
     ];
+
     protected $appends = [
-        'url'
+        'url',
     ];
+
     public function user()
     {
         return $this->belongsTo(User::class);
     }
+
     // public function topic()
     // {
     //     return $this->morphTo();
@@ -56,6 +58,7 @@ class Record extends Model
     {
         return $this->morphMany(Comment::class, 'commentable');
     }
+
     protected function url(): Attribute
     {
         return Attribute::make(
