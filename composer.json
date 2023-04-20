@@ -11,8 +11,7 @@
         "laravel/framework": "^10.0",
         "laravel/sanctum": "^3.2",
         "laravel/scout": "^9.8",
-        "laravel/tinker": "^2.7",
-        "vyuldashev/laravel-openapi": "^1.10"
+        "laravel/tinker": "^2.7"
     },
     "require-dev": {
         "barryvdh/laravel-ide-helper": "^2.13",
@@ -22,6 +21,7 @@
         "laravel/sail": "^1.16",
         "mockery/mockery": "^1.4.4",
         "nunomaduro/collision": "^7.0",
+        "nunomaduro/phpinsights":"^2.8.0",
         "phpunit/phpunit": "^10.0",
         "spatie/laravel-ignition": "^2.0"
     },

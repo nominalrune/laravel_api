@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Feature\Report;
+namespace Tests\Feature\Record;
 
 use Tests\ApiTestCase;
 
