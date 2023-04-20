@@ -19,3 +19,5 @@ yarn-error.log
 /tools
 /.phpunit.cache
 /doc
+.DS_Store
+
