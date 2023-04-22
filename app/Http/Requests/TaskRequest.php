@@ -32,14 +32,15 @@ class TaskRequest extends FormRequest
                     'user_id' => ['nullable', 'integer', 'exists:users,id'],
                 ];
             case 'POST':
-                return array_merge(
+                return array_merge_recursive(
                     $this->columns,
                     $this->required(['title', 'subtasks']),
                     $this->nullable(['id']),
                 );
             case 'PUT':
             case 'PATCH':
-                return array_merge(
+                return array_merge_recursive(
+                    $this->columns,
                     $this->required(['id']),
                     $this->nullable(['title', 'subtasks']),
                 );
@@ -69,11 +70,11 @@ class TaskRequest extends FormRequest
 
     private function nullable(array $keys)
     {
-        return array_map(fn ($key) => [$key => [...$this->columns[$key], 'nullable']], $keys);
+        return array_reduce($keys,fn ($acc, $curr) => [ ...$acc, $curr => [...$this->columns[$curr],'nullable']],[]);
     }
 
     private function required(array $keys)
     {
-        return array_map(fn ($key) => [$key => [...$this->columns[$key], 'required']], $keys);
+        return array_reduce($keys,fn ($acc, $curr) => [ ...$acc, $curr => [...$this->columns[$curr],'required']],[]);
     }
 }

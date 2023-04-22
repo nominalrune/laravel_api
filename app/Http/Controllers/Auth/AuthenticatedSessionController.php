@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\LoginRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 
 class AuthenticatedSessionController extends Controller
 {
@@ -17,7 +18,7 @@ class AuthenticatedSessionController extends Controller
     /**
      * Handle an incoming authentication request.
      *
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\JsonResponse
      */
     public function store(LoginRequest $request)
     {
@@ -26,7 +27,6 @@ class AuthenticatedSessionController extends Controller
 
             $request->session()->regenerate();
             $user = Auth::user();
-
             return response()->json(['user' => $user], 200);
         } catch (\Exception $e) {
             return response()->json($e, 401);

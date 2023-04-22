@@ -7,6 +7,7 @@ use App\Models\Permission;
 use App\Models\Task;
 use App\Services\PermissionService;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Log;
 
 class TaskController extends Controller
 {
@@ -17,6 +18,8 @@ class TaskController extends Controller
      */
     public function index(TaskRequest $request)
     {
+        Log::debug("request: ", ['path'=> request()->path(), 'method'=> request()->method(), 'user'=>$request->user()]);
+
         switch ($request->string('range', '')) {
             case 'all':
                 $tasksQuery = PermissionService::getAllAccessible(

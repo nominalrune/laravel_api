@@ -33,8 +33,6 @@ class StoreRecordRequest extends FormRequest
         return [
             'title' => ['required', 'string', 'max:255'],
             'description' => ['nullable', 'string', 'max:50000'],
-            'topic_type' => ['nullable', 'string', 'max:255'],
-            'topic_id' => ['nullable', 'integer'],
             'date' => ['nullable', 'date_format:Y-m-d'],
             'time' => ['nullable', 'integer'],
             'user_id' => ['required', 'integer', 'exists:users,id'],

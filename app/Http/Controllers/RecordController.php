@@ -6,6 +6,7 @@ use App\Http\Requests\RecordRequest;
 use App\Models\Permission;
 use App\Models\Record;
 use App\Services\PermissionService;
+use Illuminate\Support\Facades\Log;
 
 class RecordController extends Controller
 {
@@ -45,6 +46,7 @@ class RecordController extends Controller
      */
     public function store(RecordRequest $request)
     {
+        // Log::debug("request: ", ['all'=> $request->all(), 'validated'=> $request->validated(),]);
         $record = Record::create($request->validated());
         PermissionService::setOwnerShip($request->user(), $record);
 
@@ -58,13 +60,9 @@ class RecordController extends Controller
      */
     public function show(RecordRequest $request, Record $record)
     {
-        if ($request->user()->can(Permission::READ, $record)) {
-            $record->load('comments');
+                    $record->load('comments');
 
             return response()->json($record);
-        } else {
-            return response(status: 404);
-        }
     }
 
     /**

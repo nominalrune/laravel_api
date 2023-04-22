@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Log;
 
 class RecordRequest extends FormRequest
 {
@@ -32,15 +33,15 @@ class RecordRequest extends FormRequest
                     'mine' => ['nullable', 'string', 'in:all,shared,mine'],
                 ];
             case 'POST':
-                return array_merge(
+                return array_merge_recursive(
                     $this->required(['title', 'date', 'time']),
-                    $this->nullable(['state', 'task_id', 'description', 'recordable_type', 'recordable_id']),
+                    $this->nullable([ 'description', 'recordable_type', 'recordable_id']),
                 );
             case 'PUT':
             case 'PATCH':
-                return array_merge(
+                return array_merge_recursive(
                     $this->required(['id']),
-                    $this->nullable(['title', 'state', 'user_id', 'task_id', 'date', 'time', 'description', 'recordable_type', 'recordable_id']),
+                    $this->nullable(['title', 'user_id', 'date', 'time', 'description', 'recordable_type', 'recordable_id']),
                 );
             default:
                 return [];
@@ -50,9 +51,7 @@ class RecordRequest extends FormRequest
     protected $columns = [
         'id' => ['integer', 'exists:tasks,id'],
         'title' => ['string', 'max:255'],
-        'state' => ['integer', 'max:255'],
         'user_id' => ['integer', 'exists:users,id'],
-        'task_id' => ['integer', 'exists:tasks,id'],
         'date' => ['date_format:Y-m-d'],
         'time' => ['integer', 'max:1000'],
         'description' => ['string', 'max:50000'],
@@ -62,11 +61,11 @@ class RecordRequest extends FormRequest
 
     private function nullable(array $keys)
     {
-        return array_map(fn ($key) => [$key => [...$this->columns[$key], 'nullable']], $keys);
+        return array_reduce($keys,fn ($acc, $curr) => [ ...$acc, $curr => [...$this->columns[$curr],'nullable']],[]);
     }
 
     private function required(array $keys)
     {
-        return array_map(fn ($key) => [$key => [...$this->columns[$key], 'required']], $keys);
+        return  array_reduce($keys,fn ($acc, $curr) => [ ...$acc, $curr => [...$this->columns[$curr],'required']],[]);
     }
 }
