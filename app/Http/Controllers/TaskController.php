@@ -18,7 +18,7 @@ class TaskController extends Controller
      */
     public function index(TaskRequest $request)
     {
-        Log::debug("request: ", ['path'=> request()->path(), 'method'=> request()->method(), 'user'=>$request->user()]);
+        Log::debug('request: ', ['path' => request()->path(), 'method' => request()->method(), 'user' => $request->user()]);
 
         switch ($request->string('range', '')) {
             case 'all':
@@ -64,12 +64,12 @@ class TaskController extends Controller
      */
     public function show(TaskRequest $request, Task $task)
     {
-        if ($request->user()->can('view', $task)) {
+        if (! PermissionService::can($request->user(), $task, Permission::READ)) {
+            return abort(404);
+        } else {
             $task->load('comments');
 
             return response()->json($task);
-        } else {
-            return abort(404);
         }
     }
 
@@ -94,9 +94,9 @@ class TaskController extends Controller
     public function update(TaskRequest $request, int $id)
     {
 
-        $task = Task::find($id);
-        if (! $request->user()->can(Permission::UPDATE, $task)) {
-            return response(status: 404);
+        $task = Task::findOrFail($id);
+if (! PermissionService::can($request->user(), Permission::UPDATE, $task)) {
+            abort(404);
         }
         $task->update($request->validated());
 
@@ -111,7 +111,7 @@ class TaskController extends Controller
     public function destroy(TaskRequest $request, int $id)
     {
         $task = Task::find($id);
-        if (! $request->user()->can(Permission::DELETE, $task)) {
+        if (! PermissionService::can($request->user(), Permission::DELETE, $task)) {
             return response(status: 404);
         }
 

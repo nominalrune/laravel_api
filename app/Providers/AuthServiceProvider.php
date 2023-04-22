@@ -2,14 +2,15 @@
 
 namespace App\Providers;
 
-use Illuminate\Auth\Notifications\ResetPassword;
-use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
-use App\Models\User;
 use App\Models\Record;
 use App\Models\Task;
-use App\Policies\TaskPolicy;
+use App\Models\User;
 use App\Policies\RecordPolicy;
+use App\Policies\TaskPolicy;
 use App\Policies\UserPolicy;
+use Illuminate\Auth\Notifications\ResetPassword;
+use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
+
 class AuthServiceProvider extends ServiceProvider
 {
     /**
@@ -22,7 +23,6 @@ class AuthServiceProvider extends ServiceProvider
         Record::class => RecordPolicy::class,
         Task::class => TaskPolicy::class,
     ];
-
 
     /**
      * Register any authentication / authorization services.

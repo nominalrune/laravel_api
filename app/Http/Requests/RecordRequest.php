@@ -3,7 +3,6 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Support\Facades\Log;
 
 class RecordRequest extends FormRequest
 {
@@ -35,7 +34,7 @@ class RecordRequest extends FormRequest
             case 'POST':
                 return array_merge_recursive(
                     $this->required(['title', 'date', 'time']),
-                    $this->nullable([ 'description', 'recordable_type', 'recordable_id']),
+                    $this->nullable(['description', 'recordable_type', 'recordable_id']),
                 );
             case 'PUT':
             case 'PATCH':
@@ -61,11 +60,11 @@ class RecordRequest extends FormRequest
 
     private function nullable(array $keys)
     {
-        return array_reduce($keys,fn ($acc, $curr) => [ ...$acc, $curr => [...$this->columns[$curr],'nullable']],[]);
+        return array_reduce($keys, fn ($acc, $curr) => [...$acc, $curr => [...$this->columns[$curr], 'nullable']], []);
     }
 
     private function required(array $keys)
     {
-        return  array_reduce($keys,fn ($acc, $curr) => [ ...$acc, $curr => [...$this->columns[$curr],'required']],[]);
+        return array_reduce($keys, fn ($acc, $curr) => [...$acc, $curr => [...$this->columns[$curr], 'required']], []);
     }
 }

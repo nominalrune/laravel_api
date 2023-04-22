@@ -25,6 +25,9 @@ class CommentController extends Controller
     public function update(Request $request)
     {
         $comment = Comment::find($request->integer('id'));
+        if ($comment->user_id != $request->user()->id) {
+            abort(404);
+        }
         $comment->content = $request->input('content');
         $comment->save();
     }
@@ -32,6 +35,11 @@ class CommentController extends Controller
     public function destroy(Request $request)
     {
         $comment = Comment::find($request->integer('id'));
+        if ($comment->user_id != $request->user()->id) {
+            abort(404);
+        }
         $comment->delete();
+
+        return response(status: 204);
     }
 }

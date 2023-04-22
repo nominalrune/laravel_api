@@ -15,7 +15,7 @@ class PermissionService
      * @param  'read'|'create'|'update'|'delete'|'share'  $permission
      * @return bool
      */
-    public static function can(User $user, Model $permissionable, string $permission)
+    public static function can(User $user, string $permission, Model $permissionable)
     {
         return $user->id == $permissionable?->user_id
             || $user->permissions()
@@ -84,7 +84,7 @@ class PermissionService
     public static function getAllAccessible($user, $className, $permission = Permission::READ, $asQuery = false)
     {
         $query = $className::where('user_id', $user->id)
-        ->orWhere('permissions.user_id', $user->id); // うまくいかなかったら↓に変える
+            ->orWhere('permissions.user_id', $user->id); // うまくいかなかったら↓に変える
         // ->orWhereHas('permissions', fn ($permission)=>$permission->where('user_id',$user->id))
         return $asQuery ? $query : $query->get();
     }

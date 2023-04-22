@@ -38,12 +38,12 @@ class CreateTest extends ApiTestCase
     {
         $this->markTestIncomplete();
         $this->login()->post('/api/calendar_events', $this->attribute)
-        ->assertStatus(200)
-        ->assertJson([
-            ...$this->attribute,
-            'start_at' => (new Carbon($this->attribute['start_at']))->toISOString(),
-            'end_at' => (new Carbon($this->attribute['end_at']))->toISOString(),
-        ]);
+            ->assertStatus(200)
+            ->assertJson([
+                ...$this->attribute,
+                'start_at' => (new Carbon($this->attribute['start_at']))->toISOString(),
+                'end_at' => (new Carbon($this->attribute['end_at']))->toISOString(),
+            ]);
         // $calendarEventJson=$response->json();
         // $calendarEvent = CalendarEvent::find($calendarEventJson['id']);
         // $this->assertEquals($calendarEvent->title, $this->attribute['title']);

@@ -29,12 +29,11 @@ class RecordController extends Controller
                 $recordsQuery = $request->user()->records();
                 break;
         }
-
         $date = ($request->date('month') ?? now());
         $date_start = $date->copy()->startOfMonth()->toDateString();
         $date_end = $date->copy()->endOfMonth()->toDateString();
         $records = $recordsQuery->whereBetween('date', [$date_start, $date_end])
-        ->with(['comments'])->get();
+            ->with(['comments'])->get();
 
         return response()->json($records);
     }
@@ -60,9 +59,14 @@ class RecordController extends Controller
      */
     public function show(RecordRequest $request, Record $record)
     {
-                    $record->load('comments');
+        if (! PermissionService::can($request->user(), $record, Permission::READ)) {
+        abort(404);
+        } else {
+            $record->load('comments');
 
             return response()->json($record);
+        }
+
     }
 
     /**
@@ -72,6 +76,9 @@ class RecordController extends Controller
      */
     public function update(RecordRequest $request, Record $record)
     {
+        if (! PermissionService::can($request->user(), $record, Permission::UPDATE)) {
+            abort(404);
+        }
         $record->update($request->validated());
 
         return response()->json($record->load('related_task'));
@@ -84,6 +91,9 @@ class RecordController extends Controller
      */
     public function destroy(RecordRequest $request, Record $record)
     {
+        if (! PermissionService::can($request->user(), $record, Permission::DELETE)) {
+            abort(404);
+        }
         $record->delete();
 
         return response()->noContent();

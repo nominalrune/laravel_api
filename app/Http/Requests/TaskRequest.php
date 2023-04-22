@@ -70,11 +70,11 @@ class TaskRequest extends FormRequest
 
     private function nullable(array $keys)
     {
-        return array_reduce($keys,fn ($acc, $curr) => [ ...$acc, $curr => [...$this->columns[$curr],'nullable']],[]);
+        return array_reduce($keys, fn ($acc, $curr) => [...$acc, $curr => [...$this->columns[$curr], 'nullable']], []);
     }
 
     private function required(array $keys)
     {
-        return array_reduce($keys,fn ($acc, $curr) => [ ...$acc, $curr => [...$this->columns[$curr],'required']],[]);
+        return array_reduce($keys, fn ($acc, $curr) => [...$acc, $curr => [...$this->columns[$curr], 'required']], []);
     }
 }

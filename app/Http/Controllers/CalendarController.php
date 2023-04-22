@@ -6,14 +6,14 @@ use App\Http\Requests\CalendarEventStoreRequest;
 use App\Http\Requests\CalendarIndexRequest;
 use App\Models\CalendarEntry;
 use App\Models\CalendarEvent;
+use App\Models\Permission;
 use App\Models\Task;
 use App\Services\Calendar\traits\Create;
+use App\Services\PermissionService;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
-use Vyuldashev\LaravelOpenApi\Attributes as OpenApi;
 
-#[OpenApi\PathItem]
 class CalendarController extends Controller
 {
     use Create;
@@ -21,7 +21,6 @@ class CalendarController extends Controller
     /**
      * Return a listing of calendar events.
      */
-    #[OpenApi\Operation(tags: ['calendar'], method: 'GET')]
     public function index(CalendarIndexRequest $request): \Illuminate\Http\JsonResponse
     {
         $display_type = $request->string('display_type', 'month');
@@ -67,30 +66,36 @@ class CalendarController extends Controller
         return response()->json($events->values());
     }
 
-    public function show(int $id)
-    {
-        return CalendarEvent::find($id);
-    }
+    // public function show(int $id)
+    // {
+    //     return CalendarEvent::find($id);
+    // }
 
     public function store(CalendarEventStoreRequest $request): \Illuminate\Http\JsonResponse
     {
         $calendarEvent = $this->create($request);
+        PermissionService::setOwnerShip($request->user(), $calendarEvent);
 
         return response()->json($calendarEvent);
     }
 
     public function update(Request $request, CalendarEvent $calendarEvent)
     {
+        if (! PermissionService::can($request->user(), Permission::UPDATE, $calendarEvent)) {
         $calendarEvent->update($request->all());
+        }
 
         return response()->json($calendarEvent);
     }
 
-    public function destroy(CalendarEvent $calendarEvent)
+    public function destroy(Request $request, CalendarEvent $calendarEvent)
     {
+        if (! PermissionService::can($request->user(), Permission::DELETE, $calendarEvent)) {
+        abort(404);
+    }
         $calendarEvent->delete();
 
-        return response()->json(null, 204);
+        return response(status: 204);
     }
 
     private function getDefaultDays($display_type, Carbon $date)

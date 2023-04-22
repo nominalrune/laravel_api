@@ -34,10 +34,10 @@ class IndexTest extends ApiTestCase
     public function test_gets_own_tasks_without_query(): void
     {
         $this->login()->get('/api/tasks')
-        ->assertJson([
-            $this->task->toArray(), $this->completedTask->toArray(),
-        ], true)
-        ->assertJsonMissing($this->othersTask->toArray(), true);
+            ->assertJson([
+                $this->task->toArray(), $this->completedTask->toArray(),
+            ], true)
+            ->assertJsonMissing($this->othersTask->toArray(), true);
     }
 
     /**
@@ -52,9 +52,9 @@ class IndexTest extends ApiTestCase
     public function test_gets_shared_tasks_with_range_is_shared_query(): void
     {
         $this->login()->get('/api/tasks?range=shared')
-        ->assertJson([$this->sharedTask->toArray()], true)
-        ->assertJsonMissing([
-            $this->task->toArray(), $this->task->toArray(),
-        ], true);
+            ->assertJson([$this->sharedTask->toArray()], true)
+            ->assertJsonMissing([
+                $this->task->toArray(), $this->task->toArray(),
+            ], true);
     }
 }
