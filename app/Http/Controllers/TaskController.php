@@ -64,7 +64,7 @@ class TaskController extends Controller
      */
     public function show(TaskRequest $request, Task $task)
     {
-        if (! PermissionService::can($request->user(), $task, Permission::READ)) {
+        if (! PermissionService::can($request->user(), Permission::READ, $task)) {
             return abort(404);
         } else {
             $task->load('comments');

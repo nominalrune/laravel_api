@@ -59,7 +59,7 @@ class RecordController extends Controller
      */
     public function show(RecordRequest $request, Record $record)
     {
-        if (! PermissionService::can($request->user(), $record, Permission::READ)) {
+        if (! PermissionService::can($request->user(), Permission::READ, $record)) {
         abort(404);
         } else {
             $record->load('comments');
@@ -76,7 +76,7 @@ class RecordController extends Controller
      */
     public function update(RecordRequest $request, Record $record)
     {
-        if (! PermissionService::can($request->user(), $record, Permission::UPDATE)) {
+        if (! PermissionService::can($request->user(), Permission::UPDATE, $record,)) {
             abort(404);
         }
         $record->update($request->validated());
@@ -91,7 +91,7 @@ class RecordController extends Controller
      */
     public function destroy(RecordRequest $request, Record $record)
     {
-        if (! PermissionService::can($request->user(), $record, Permission::DELETE)) {
+        if (! PermissionService::can($request->user(), Permission::DELETE, $record)) {
             abort(404);
         }
         $record->delete();
