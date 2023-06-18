@@ -11,6 +11,10 @@ class AuthenticatedSessionController extends Controller
 {
     public function show()
     {
+        $user = Auth::user();
+        if (! $user) {
+            return abort(401);
+        }
         return response()->json(['user' => Auth::user()], 200);
     }
 
@@ -21,16 +25,14 @@ class AuthenticatedSessionController extends Controller
      */
     public function store(LoginRequest $request)
     {
-        try {
-            $request->authenticate();
+        $request->authenticate();
 
-            $request->session()->regenerate();
-            $user = Auth::user();
-
-            return response()->json(['user' => $user], 200);
-        } catch (\Exception $e) {
-            return response()->json($e, 401);
+        $request->session()->regenerate();
+        $user = Auth::user();
+        if (! $user) {
+            abort(401);
         }
+        return response()->json(['user' => $user], 200);
     }
 
     /**

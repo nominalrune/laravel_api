@@ -54,7 +54,7 @@ class TaskController extends Controller
             }
         );
 
-        return response()->json($tasksQuery->with(['comments'])->get());
+        return response()->json($tasksQuery->with(['comments','parentTask'])->get());
     }
 
     /**
@@ -100,7 +100,7 @@ if (! PermissionService::can($request->user(), Permission::UPDATE, $task)) {
         }
         $task->update($request->validated());
 
-        return response()->json($task->load('parent_task'));
+        return response()->json($task->load('parentTask'));
     }
 
     /**

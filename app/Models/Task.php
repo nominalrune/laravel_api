@@ -44,7 +44,7 @@ class Task extends Model
     ];
 
     protected $casts = [
-        'due' => 'date',
+        'due' => 'datetime:Y-m-d',
         'subtasks' => 'array',
     ];
 

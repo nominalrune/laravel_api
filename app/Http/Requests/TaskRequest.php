@@ -34,8 +34,8 @@ class TaskRequest extends FormRequest
             case 'POST':
                 return array_merge_recursive(
                     $this->columns,
-                    $this->required(['title', 'subtasks']),
-                    $this->nullable(['id']),
+                    $this->required(['title']),
+                    $this->nullable(['id', 'subtasks']),
                 );
             case 'PUT':
             case 'PATCH':
