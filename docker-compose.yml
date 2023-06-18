@@ -1,6 +1,22 @@
 # For more information: https://laravel.com/docs/sail
 version: '3'
 services:
+    # nginx:
+    #     image: 'nginx:latest'
+    #     ports:
+    #         - '${SSL_PORT:-443}:443'
+    #     environment:
+    #         - SSL_PORT=${SSL_PORT:-443}
+    #         - APP_SERVICE=${APP_SERVICE:-laravel.test}
+    #         - SERVER_NAME=${SERVER_NAME:-localhost}
+    #     volumes:
+    #         - 'sail-nginx:/etc/nginx/certs'
+    #         - './vendor/ryoluo/sail-ssl/nginx/templates:/etc/nginx/templates'
+    #         - './vendor/ryoluo/sail-ssl/nginx/generate-ssl-cert.sh:/docker-entrypoint.d/99-generate-ssl-cert.sh'
+    #     depends_on:
+    #         - ${APP_SERVICE:-laravel.test}
+    #     networks:
+    #         - sail
     laravel.test:
         build:
             context: ./vendor/laravel/sail/runtimes/8.2
@@ -44,9 +60,17 @@ services:
             test: ["CMD", "mysqladmin", "ping", "-p${DB_PASSWORD}"]
             retries: 3
             timeout: 5s
+    mailhog:
+        image: 'mailhog/mailhog:latest'
+        ports:
+            - 8025:8025
+        networks:
+            - sail
 networks:
     sail:
         driver: bridge
 volumes:
+    sail-nginx:
+        driver: local
     sail-mysql:
         driver: local
