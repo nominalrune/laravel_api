@@ -1,0 +1,17 @@
+<?php
+
+namespace App\Http\Requests;
+
+class Request extends Request
+{
+    protected array $columns = [];
+    protected function getRules() {
+        return [];
+    }
+    protected function storeRules() {
+        return [];
+    }
+    protected function updateRules() {
+        return [];
+    }
+}
