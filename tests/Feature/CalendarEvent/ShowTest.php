@@ -17,7 +17,7 @@ class ShowTest extends ApiTestCase
             'description' => 'description is a description',
             'start_at' => '2021-01-01 00:00:00',
             'end_at' => '2021-01-01 01:00:00',
-            'user_id' => $this->user->id,
+            'user_id' => $this->user01->id,
         ]);
     }
 
@@ -26,7 +26,7 @@ class ShowTest extends ApiTestCase
      */
     public function can_access_calendar_event_with_login(): void
     {
-        $response = $this->login()->get('/api/calendar_events/'.$this->calendarEvent->id);
+        $response = $this->login()->getJson('/calendar_events/'.$this->calendarEvent->id);
         $response->assertStatus(200);
         $response->assertJson([
             'id' => $this->calendarEvent->id,
@@ -43,7 +43,7 @@ class ShowTest extends ApiTestCase
      */
     public function cannot_access_calendar_event_without_login(): void
     {
-        $response = $this->get('/api/calendar_events/'.$this->calendarEvent->id);
+        $response = $this->getJson('/calendar_events/'.$this->calendarEvent->id);
         $response->assertStatus(401);
     }
 }

@@ -18,7 +18,7 @@ class CreateTest extends ApiTestCase
             'description' => 'description is a description',
             'start_at' => '2021-11-11T10:10:00.000+0900',
             'end_at' => '2021-11-11T11:10:00.000+0900',
-            'user_id' => $this->user->id,
+            'user_id' => $this->user01->id,
         ];
     }
 
@@ -27,7 +27,7 @@ class CreateTest extends ApiTestCase
      */
     public function cannot_create_calendar_event_without_login(): void
     {
-        $response = $this->post('/api/calendar_events', $this->attribute);
+        $response = $this->postJson('/calendar_events', $this->attribute);
         $response->assertStatus(401);
     }
 
@@ -37,7 +37,7 @@ class CreateTest extends ApiTestCase
     public function can_create_calendar_event_with_login(): void
     {
         $this->markTestIncomplete();
-        $this->login()->post('/api/calendar_events', $this->attribute)
+        $this->login()->postJson('/calendar_events', $this->attribute)
             ->assertStatus(200)
             ->assertJson([
                 ...$this->attribute,

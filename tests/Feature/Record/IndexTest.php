@@ -11,6 +11,6 @@ class IndexTest extends ApiTestCase
      */
     public function can_not_access_calendar_without_login(): void
     {
-        $this->get('/api/records')->assertStatus(401);
+        $this->getJson('/records')->assertStatus(401);
     }
 }
