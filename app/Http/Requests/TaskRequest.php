@@ -1,15 +1,10 @@
 <?php
 
 namespace App\Http\Requests;
+use App\Rules\Subtask;
 
-use Illuminate\Foundation\Http\FormRequest;
-
-class TaskRequest extends FormRequest
+class TaskRequest extends Request
 {
-    public function authorize()
-    {
-        return true;
-    }
 
     protected function prepareForValidation()
     {
@@ -17,7 +12,19 @@ class TaskRequest extends FormRequest
             'user_id' => $this->user()->id,
         ]);
     }
-
+    protected function getRules() {
+        return  [
+            'range' => ['nullable', 'string', 'in:all,shared,mine'],
+            'word' => ['nullable', 'string', 'max:255'],
+            'state' => ['nullable', 'integer', 'max:255'],
+            'user_id' => ['nullable', 'integer', 'exists:users,id'],
+        ];
+    }
+    protected function storeRules() {
+        return array_merge(
+            $this->required(['title']),
+        );
+    }
     /**
      * @return array<string, mixed>
      */
@@ -48,33 +55,22 @@ class TaskRequest extends FormRequest
                 return [];
         }
     }
-
+    protected function updateRules() {
+        return array_merge_recursive(
+            $this->columns,
+            $this->required(['id']),
+            $this->nullable(['title', 'subtasks']),
+        );
+    }
+    protected $subtaskKeys = [];
     protected $columns = [
         'id' => ['integer', 'exists:tasks,id'],
         'title' => ['string', 'max:255'],
-        'subtasks' => ['array'],
+        'subtasks' => ['array', new Subtask],
         'state' => ['integer', 'max:255'],
         'user_id' => ['nullable', 'integer', 'exists:users,id'],
         'due' => ['nullable', 'date_format:Y-m-d'],
         'description' => ['nullable', 'string', 'max:50000'],
         'parent_task_id' => ['nullable', 'integer', 'exists:tasks,id'],
-        'subtasks.*' => ['nullable', 'array'],
-        'subtasks.*.title' => ['required', 'string', 'max:255'],
-        'subtasks.*.state' => ['required', 'integer', 'min:0', 'max:10'],
-        'subtasks.*.subtasks' => ['nullable', 'array'],
-        'subtasks.*.subtasks.*' => ['nullable', 'array'],
-        'subtasks.*.subtasks.*.title' => ['required', 'string', 'max:255'],
-        'subtasks.*.subtasks.*.state' => ['required', 'integer', 'max:255'],
-        'subtasks.*.subtasks.*.subtasks' => ['nullable', 'array'],
     ];
-
-    private function nullable(array $keys)
-    {
-        return array_reduce($keys, fn ($acc, $curr) => [...$acc, $curr => [...$this->columns[$curr], 'nullable']], []);
-    }
-
-    private function required(array $keys)
-    {
-        return array_reduce($keys, fn ($acc, $curr) => [...$acc, $curr => [...$this->columns[$curr], 'required']], []);
-    }
 }
