@@ -10,7 +10,7 @@ class RecordRequest extends Request
             'user_id' => $this->user()->id,
         ]);
     }
-    protected function getRules()
+    protected function getRules():array
     {
         return [
             'word' => ['nullable', 'string', 'max:255'],
@@ -19,7 +19,7 @@ class RecordRequest extends Request
             'mine' => ['nullable', 'string', 'in:all,shared,mine'],
         ];
     }
-    protected function storeRules()
+    protected function storeRules():array
     {
         return [
             ...$this->required([
@@ -32,13 +32,13 @@ class RecordRequest extends Request
             ...$this->nullable(['description', 'time']),
         ];
     }
-    protected function updateRules()
+    protected function updateRules():array
     {
         return [
             ...$this->nullable(['id', 'title', 'user_id', 'date', 'time', 'description', 'recordable_type', 'recordable_id']),
         ];
     }
-    protected $columns = [
+    protected array $columns = [
         'id' => ['integer', 'exists:records,id'],
         'title' => ['string', 'max:255'],
         'user_id' => ['integer', 'exists:users,id'],

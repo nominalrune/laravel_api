@@ -8,7 +8,7 @@ use Illuminate\Contracts\Validation\ValidatorAwareRule;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Concerns\ValidatesAttributes;
 
-class Subtask implements ValidationRule
+class SubtaskRule implements ValidationRule
 {
     use ValidatesAttributes;
     public function validate(string $attribute, mixed $value, Closure $fail) : void
