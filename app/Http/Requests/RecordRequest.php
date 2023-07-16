@@ -2,53 +2,44 @@
 
 namespace App\Http\Requests;
 
-use Illuminate\Foundation\Http\FormRequest;
-
-class RecordRequest extends FormRequest
+class RecordRequest extends Request
 {
-    public function authorize()
-    {
-        return true;
-    }
-
     protected function prepareForValidation()
     {
         $this->merge([
             'user_id' => $this->user()->id,
         ]);
     }
-
-    /**
-     * @return array<string, mixed>
-     */
-    public function rules()
+    protected function getRules():array
     {
-        switch ($this->method()) {
-            case 'GET': // TODO これチェックされるの？ FormRequestって名前からして、GETの時はチェックされないような気がする。urlクエリもね
-                return [
-                    'word' => ['nullable', 'string', 'max:255'],
-                    'state' => ['nullable', 'integer', 'max:255'],
-                    'user_id' => ['nullable', 'integer', 'exists:users,id'], // だれかほかの人の記録を指定する
-                    'mine' => ['nullable', 'string', 'in:all,shared,mine'],
-                ];
-            case 'POST':
-                return array_merge_recursive(
-                    $this->required(['title', 'date', 'time']),
-                    $this->nullable(['description', 'recordable_type', 'recordable_id']),
-                );
-            case 'PUT':
-            case 'PATCH':
-                return array_merge_recursive(
-                    $this->required(['id']),
-                    $this->nullable(['title', 'user_id', 'date', 'time', 'description', 'recordable_type', 'recordable_id']),
-                );
-            default:
-                return [];
-        }
+        return [
+            'word' => ['nullable', 'string', 'max:255'],
+            'state' => ['nullable', 'integer', 'max:255'],
+            'user_id' => ['nullable', 'integer', 'exists:users,id'], // だれかほかの人の記録を指定する
+            'mine' => ['nullable', 'string', 'in:all,shared,mine'],
+        ];
     }
-
-    protected $columns = [
-        'id' => ['integer', 'exists:tasks,id'],
+    protected function storeRules():array
+    {
+        return [
+            ...$this->required([
+                'title',
+                'user_id',
+                'recordable_type',
+                'recordable_id',
+                'date',
+            ]),
+            ...$this->nullable(['description', 'time']),
+        ];
+    }
+    protected function updateRules():array
+    {
+        return [
+            ...$this->nullable(['id', 'title', 'user_id', 'date', 'time', 'description', 'recordable_type', 'recordable_id']),
+        ];
+    }
+    protected array $columns = [
+        'id' => ['integer', 'exists:records,id'],
         'title' => ['string', 'max:255'],
         'user_id' => ['integer', 'exists:users,id'],
         'date' => ['date_format:Y-m-d'],
@@ -57,14 +48,4 @@ class RecordRequest extends FormRequest
         'recordable_type' => ['string', 'max:255'],
         'recordable_id' => ['integer'],
     ];
-
-    private function nullable(array $keys)
-    {
-        return array_reduce($keys, fn ($acc, $curr) => [...$acc, $curr => [...$this->columns[$curr], 'nullable']], []);
-    }
-
-    private function required(array $keys)
-    {
-        return array_reduce($keys, fn ($acc, $curr) => [...$acc, $curr => [...$this->columns[$curr], 'required']], []);
-    }
 }

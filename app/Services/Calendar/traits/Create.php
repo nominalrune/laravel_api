@@ -2,7 +2,7 @@
 
 namespace App\Services\Calendar\traits;
 
-use App\Http\Requests\CalendarEventStoreRequest;
+use App\Http\Requests\CalendarEventRequest;
 use App\Models\CalendarEvent;
 
 trait Create
@@ -10,7 +10,7 @@ trait Create
     /**
      * parse inputs from the request
      */
-    private function parseInputs(CalendarEventStoreRequest $request): array
+    private function parseInputs(CalendarEventRequest $request): array
     {
         return [
             'title' => $request->string('title'),
@@ -24,7 +24,7 @@ trait Create
     /**
      * create a calendar event
      */
-    protected function create(CalendarEventStoreRequest $request): CalendarEvent
+    protected function create(CalendarEventRequest $request): CalendarEvent
     {
         $inputs = $this->parseInputs($request);
         $calendarEvent = CalendarEvent::create($inputs);

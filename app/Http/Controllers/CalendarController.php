@@ -2,8 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\CalendarEventStoreRequest;
-use App\Http\Requests\CalendarIndexRequest;
+use App\Http\Requests\CalendarEventRequest;
 use App\Models\CalendarEntry;
 use App\Models\CalendarEvent;
 use App\Models\Permission;
@@ -21,7 +20,7 @@ class CalendarController extends Controller
     /**
      * Return a listing of calendar events.
      */
-    public function index(CalendarIndexRequest $request): \Illuminate\Http\JsonResponse
+    public function index(CalendarEventRequest $request): \Illuminate\Http\JsonResponse
     {
         $display_type = $request->string('display_type', 'month');
         $request->mergeIfMissing($this->getDefaultDays($display_type, $request->date('start') ?? now()));
@@ -29,9 +28,7 @@ class CalendarController extends Controller
         $end = $request->date('end');
 
         $event_type = strval($request->string('event_type', 'all'));
-        // $users = $request->input('user',[$request->user()->id]);
         [$tasks, $calendarEvents, $records] = [[], [], []];
-        // Log::debug('calendar index', ['start' => $start, 'end' => $end, 'event_type'=>$event_type, 'users' => $users]);
         if ($event_type === 'all' || $event_type === 'task') {
                 $tasks = $request->user()->tasks()
                     ->where('due', '>=', $start->toDateString())
@@ -57,25 +54,13 @@ class CalendarController extends Controller
                     });
         }
         $events = $calendarEvents->concat($tasks)->concat($records);
-            // ->sort(function ($a, $b) {
-            //     $a_date = $a instanceof Task ? $a->due : $a->start ?? $a->end;
-            //     $b_date = $b instanceof Task ? $b->due : $b->start ?? $b->end;
-            //     return $a_date <=> $b_date;
-            // });
-        // Log::debug("CallenderController::index, all events",[$events->values()]);
         return response()->json($events->values());
     }
 
-    // public function show(int $id)
-    // {
-    //     return CalendarEvent::find($id);
-    // }
-
-    public function store(CalendarEventStoreRequest $request): \Illuminate\Http\JsonResponse
+    public function store(CalendarEventRequest $request): \Illuminate\Http\JsonResponse
     {
         $calendarEvent = $this->create($request);
         PermissionService::setOwnerShip($request->user(), $calendarEvent);
-
         return response()->json($calendarEvent);
     }
 
@@ -84,7 +69,6 @@ class CalendarController extends Controller
         if (! PermissionService::can($request->user(), Permission::UPDATE, $calendarEvent)) {
         $calendarEvent->update($request->all());
         }
-
         return response()->json($calendarEvent);
     }
 
@@ -94,7 +78,6 @@ class CalendarController extends Controller
         abort(404);
     }
         $calendarEvent->delete();
-
         return response(status: 204);
     }
 
@@ -114,7 +97,6 @@ class CalendarController extends Controller
                 $end = $date->copy()->endOfDay();
                 break;
         }
-        // Log::debug('calendar getDefaultDays', ['display_type' => $display_type, 'start' => $start, 'end' => $end]);
         return ['start' => $start, 'end' => $end];
     }
 }
