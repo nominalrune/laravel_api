@@ -8,8 +8,9 @@ class CalendarEventRequest extends Request
     {
         return [
             'display_type' => ['nullable', 'in:month,week,day'],
-            'start' => ['nullable', 'date_format:Y-m-d H:i:s'],
-            'end' => ['nullable', 'date_format:Y-m-d H:i:s'],
+            'month' => ['nullable', 'date_format:Y-m'],
+            'start' => ['nullable', 'date_format:Y-m-d'],
+            'end' => ['nullable', 'date_format:Y-m-d'],
             'event_type' => ['nullable', 'string'],
             'user.*.id' => ['nullable', 'integer', 'exists:users,id'],
             'status_type' => ['nullable', 'string'],
