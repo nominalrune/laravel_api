@@ -48,24 +48,28 @@ class Handler extends ExceptionHandler
      */
     public function register()
     {
-        // $this->renderable(function (ModelNotFoundException $e, Request $request) {
-        //     return response(status: 404)->withException($e);
-        // });
-        // $this->renderable(function (ValidationException $e, Request $request) {
-        //     return response(status: 422);
-        // });
-        $this->renderable(function (QueryException $e, Request $request) {
-            $this->log($e, $request);
-
-            return response()->json(['message' => 'Failed to proccess invalid request.'], 422);
-        });
-        $this->reportable(function (Throwable $e) {
-            //
+        $this->reportable(function (\Exception $e) {
+            if (! $this->isHttpException($e)) {
+                $this->log($e);
+            }
         });
     }
 
-    private function log(Throwable $e, Request $request)
+    private function log(Throwable $e)
     {
-        Log::error($e->getMessage(), ['request' => 'user_id: '.$request->user()->id.', url: '.$request->fullUrl().', method: '.$request->method().', ip: '.$request->ip(), 'trace' => $e->getTraceAsString()]);
+        $request = request();
+        Log::channel('internalError')->error($e->getMessage(), [
+            'request' => [
+                'url' => $request->fullUrl(),
+                'method' => $request->method(),
+                // 'headers' => $request->headers, // NOTE optout for a security reason
+                'body' => $request->getContent(),
+            ],
+            'user' => [
+                'user_id' => $request->user()->id,
+                'ip' => $request->ip(),
+            ],
+            'trace' => $e->getTraceAsString()
+        ]);
     }
 }

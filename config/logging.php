@@ -81,7 +81,20 @@ return [
             'path' => storage_path('logs/debug.log'),
             'level' => 'debug',
         ],
-
+        'browser' => [
+            'driver' => 'monolog',
+            'handler' => Monolog\Handler\BrowserConsoleHandler::class,
+            'formatter' => Monolog\Formatter\HtmlFormatter::class,
+            'formatter_with' => [
+                'dateFormat' => 'Y-m-d',
+            ],
+        ],
+        'internalError' => [
+            'driver' => 'daily',
+            'formatter' => Monolog\Formatter\JsonFormatter::class,
+            'path' =>  storage_path('logs/internal_error.log'),
+            'level' => env('LOG_LEVEL', 'debug'),
+        ],
         'slack' => [
             'driver' => 'slack',
             'url' => env('LOG_SLACK_WEBHOOK_URL'),
