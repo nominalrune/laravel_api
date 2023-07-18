@@ -11,7 +11,7 @@ class IndexTest extends ApiTestCase
      */
     public function can_not_access_calendar_events_without_login(): void
     {
-        $this->get('/api/calendar_events')->assertStatus(401);
+        $this->getJson('/calendar_events')->assertStatus(401);
     }
 
     /**
@@ -19,6 +19,6 @@ class IndexTest extends ApiTestCase
      */
     public function can_access_calendar_events_with_login(): void
     {
-        $this->login()->get('/api/calendar_events')->assertStatus(200);
+        $this->login()->getJson('/calendar_events')->assertStatus(200);
     }
 }

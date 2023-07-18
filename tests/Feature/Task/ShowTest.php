@@ -17,7 +17,7 @@ class ShowTest extends ApiTestCase
      */
     public function cannot_access_task_without_login(): void
     {
-        $response = $this->get('/api/tasks/'.$this->task->id);
+        $response = $this->getJson('/tasks/'.$this->task->id);
         $response->assertStatus(401);
     }
 
@@ -27,7 +27,7 @@ class ShowTest extends ApiTestCase
      * @group task-show */
     public function test_can_access_task_with_login(): void
     {
-        $this->login()->get('/api/tasks/'.$this->task->id)
+        $this->login()->getJson('/tasks/'.$this->task->id)
             ->assertStatus(200)
             ->assertJson($this->task->toArray(), true);
     }
@@ -38,7 +38,7 @@ class ShowTest extends ApiTestCase
      * @group task-show */
     public function can_access_shared_task(): void
     {
-        $this->login()->get('/api/tasks/'.$this->sharedTask->id)
+        $this->login()->getJson('/tasks/'.$this->sharedTask->id)
             ->assertStatus(200)
             ->assertJson($this->sharedTask->toArray(), true);
     }
@@ -49,7 +49,7 @@ class ShowTest extends ApiTestCase
      * @group task-show */
     public function cannot_access_others_task(): void
     {
-        $this->login()->get('/api/tasks/'.$this->othersTask->id)
+        $this->login()->getJson('/tasks/'.$this->othersTask->id)
             ->assertStatus(404)
             ->assertJsonMissing($this->othersTask->toArray(), true);
     }

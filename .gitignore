@@ -20,4 +20,4 @@ yarn-error.log
 /.phpunit.cache
 /doc
 .DS_Store
-
+*.log
