@@ -22,13 +22,13 @@ class TaskRequest extends Request
     protected function storeRules():array {
         return array_merge(
             $this->required(['title']),
+            $this->nullable(['subtasks', 'state', 'user_id', 'due', 'description', 'parent_task_id']),
         );
     }
     protected function updateRules():array {
         return array_merge(
-            $this->columns,
             $this->required(['id']),
-            $this->nullable(['title', 'subtasks']),
+            $this->nullable(['title', 'subtasks', 'state', 'user_id', 'due', 'description', 'parent_task_id']),
         );
     }
     public function __construct(
@@ -36,8 +36,8 @@ class TaskRequest extends Request
         parent::__construct();
         $this->columns = [
             'id' => ['integer', 'exists:tasks,id'],
-            'title' => ['string', 'max:255'],
-            'subtasks' => ['array', ],
+            'title' => ['string', 'min:1', 'max:255'],
+            'subtasks' => ['array', ], // validates at controller. see TaskController.php
             'state' => ['integer', 'max:255'],
             'user_id' => ['nullable', 'integer', 'exists:users,id'],
             'due' => ['nullable', 'date_format:Y-m-d'],
@@ -45,6 +45,5 @@ class TaskRequest extends Request
             'parent_task_id' => ['nullable', 'integer', 'exists:tasks,id'],
         ];
     }
-    protected $subtaskKeys = [];
     protected array $columns;
 }

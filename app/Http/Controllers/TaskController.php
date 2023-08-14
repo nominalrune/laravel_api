@@ -28,7 +28,6 @@ class TaskController extends Controller
                     Permission::READ,
                     true
                 );
-                // dump($tasksQuery);
                 break;
             case 'shared':
                 $tasksQuery = PermissionService::getShared(
@@ -37,12 +36,10 @@ class TaskController extends Controller
                     Permission::READ,
                     true
                 );
-                // dump($tasksQuery->get()->toArray());
                 break;
             case 'mine':
             default:
                 $tasksQuery = $request->user()->tasks();
-                // dump($tasksQuery);
                 break;
         }
         $request->whenFilled(
@@ -54,60 +51,37 @@ class TaskController extends Controller
             }
         );
 
-        return response()->json($tasksQuery->with(['comments','parentTask'])->get());
+        return response()->json($tasksQuery->with(['comments', 'parentTask'])->get());
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @return \Illuminate\Http\JsonResponse
-     */
     public function show(TaskRequest $request, Task $task)
     {
         if (! PermissionService::can($request->user(), Permission::READ, $task)) {
             return abort(404);
         } else {
             $task->load('comments');
-
             return response()->json($task);
         }
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @return \Illuminate\Http\JsonResponse
-     */
     public function store(TaskRequest $request)
     {
         $task = Task::create($request->validated());
         PermissionService::setOwnerShip($request->user(), $task);
-
         return response()->json($task, 201);
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @return \Illuminate\Http\JsonResponse
-     */
+
     public function update(TaskRequest $request, int $id)
     {
-
         $task = Task::findOrFail($id);
-if (! PermissionService::can($request->user(), Permission::UPDATE, $task)) {
+        if (! PermissionService::can($request->user(), Permission::UPDATE, $task)) {
             abort(404);
         }
         $task->update($request->validated());
-
         return response()->json($task->load('parentTask'));
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function destroy(TaskRequest $request, int $id)
     {
         $task = Task::find($id);

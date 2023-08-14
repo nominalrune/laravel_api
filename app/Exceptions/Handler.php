@@ -58,16 +58,18 @@ class Handler extends ExceptionHandler
     private function log(Throwable $e)
     {
         $request = request();
-        Log::channel('internalError')->error($e->getMessage(), [
+        Log::channel('internalError')->error([
+            'code' => $e->getCode(),
+            'message' => $e->getMessage(),
             'request' => [
-                'url' => $request->fullUrl(),
-                'method' => $request->method(),
+                'url' => $request?->fullUrl(),
+                'method' => $request?->method(),
                 // 'headers' => $request->headers, // NOTE optout for a security reason
-                'body' => $request->getContent(),
+                'body' => $request?->getContent(),
             ],
             'user' => [
-                'user_id' => $request->user()->id,
-                'ip' => $request->ip(),
+                'user_id' => $request?->user()?->id,
+                'ip' => $request?->ip(),
             ],
             'trace' => $e->getTraceAsString()
         ]);

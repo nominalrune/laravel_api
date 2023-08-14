@@ -25,11 +25,14 @@ class RecordRequest extends Request
             ...$this->required([
                 'title',
                 'user_id',
-                'recordable_type',
-                'recordable_id',
                 'date',
             ]),
-            ...$this->nullable(['description', 'time']),
+            ...$this->nullable([
+                'recordable_type',
+                'recordable_id',
+                'description',
+                'time'
+            ]),
         ];
     }
     protected function updateRules():array

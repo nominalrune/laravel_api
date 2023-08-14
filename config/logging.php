@@ -70,6 +70,13 @@ return [
             'days' => 14,
         ],
 
+        'backup' => [
+            'driver' => 'daily',
+            'path' => storage_path('logs/backup.log'),
+            'level' => 'info',
+        ],
+
+        
         'stdout' => [
             'driver' => 'monologue',
             'path' => 'php://stdout',
@@ -92,7 +99,7 @@ return [
         'internalError' => [
             'driver' => 'daily',
             'formatter' => Monolog\Formatter\JsonFormatter::class,
-            'path' =>  storage_path('logs/internal_error.log'),
+            'path' =>  storage_path('logs/internal_error.json'),
             'level' => env('LOG_LEVEL', 'debug'),
         ],
         'slack' => [
