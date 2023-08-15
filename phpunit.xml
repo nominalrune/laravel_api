@@ -21,6 +21,11 @@
     </testsuite>
   </testsuites>
   <php>
+  <env name="APP_URL" value=""/>
+    <env name="DB_CONNECTION" value="sqlite"/>
+    <env name="DB_DATABASE" value="/home/paulsenglish/paulsenglish.jp/public_html/todo-api/storage/app/test.sqlite"/>
+
+
     <env name="APP_ENV" value="testing"/>
     <env name="BCRYPT_ROUNDS" value="4"/>
     <env name="CACHE_DRIVER" value="array"/>

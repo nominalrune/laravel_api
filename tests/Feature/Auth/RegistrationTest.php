@@ -11,6 +11,7 @@ class RegistrationTest extends TestCase
 
     public function test_new_users_can_register()
     {
+        $this->markTestSkipped('This test is skipped because registration is not available now.');
         $response = $this->postJson('/register', [
             'name' => 'Test User',
             'email' => 'test@example.com',

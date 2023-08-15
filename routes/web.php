@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Auth\ApiTokenController;
 use App\Http\Controllers\CalendarController;
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\RecordController;
@@ -19,6 +20,9 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::post('/users', [UserController::class, 'store']);
     Route::put('/users/{id}', [UserController::class, 'update']);
     Route::delete('/users/{id}', [UserController::class, 'destroy']);
+    Route::get('/users/{id}/tokens',[ApiTokenController::class,'showApiTokens']);
+    Route::post('/users/{id}/tokens',[ApiTokenController::class,'createApiToken']);
+    Route::delete('/users/{id}/tokens/{token}',[ApiTokenController::class,'deleteApiToken']);
 
     Route::get('/tasks', [TaskController::class, 'index'])->name('task.index');
     Route::get('/tasks/{task}', [TaskController::class, 'show'])->name('task.show');
