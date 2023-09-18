@@ -1,0 +1,8 @@
+#! /bin/bash
+alias artisan='php8.1 artisan'
+alias apigen='php tools/apigen'
+
+alias ide='artisan ide-helper:generate && artisan ide-helper:models --nowrite && artisan ide-helper:meta'
+
+alias test='artisan test -c ./phpunit.server.xml'
+
