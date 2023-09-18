@@ -76,7 +76,17 @@ return [
             'level' => 'info',
         ],
 
-        
+        'response-log' =>[
+            'driver' => 'monolog',
+            'handler' => Monolog\Handler\BufferHandler::class,
+            'with' => [
+                    'handler' => new Monolog\Handler\StreamHandler(storage_path('logs/response-statistics-'.date("Y-m-d").'.json'), Monolog\Logger::INFO, false, 0664),
+                    'bufferLimit' => 1000,
+                    'flushOnOverflow' => true,
+            ],
+            'formatter' => App\Logger\Formatter\ResponseCodeFormatter::class,
+        ],
+
         'stdout' => [
             'driver' => 'monologue',
             'path' => 'php://stdout',
